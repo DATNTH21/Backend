@@ -1,0 +1,478 @@
+[
+  {
+    "name": ".gitignore",
+    "type": "file",
+    "path": ".gitignore"
+  },
+  {
+    "name": ".prettierrc",
+    "type": "file",
+    "path": ".prettierrc"
+  },
+  {
+    "name": "learn-swagger.yaml",
+    "type": "file",
+    "path": "learn-swagger.yaml"
+  },
+  {
+    "name": "package-lock.json",
+    "type": "file",
+    "path": "package-lock.json"
+  },
+  {
+    "name": "package.json",
+    "type": "file",
+    "path": "package.json"
+  },
+  {
+    "name": "server.js",
+    "type": "file",
+    "path": "server.js"
+  },
+  {
+    "name": "src",
+    "type": "directory",
+    "path": "src",
+    "contents": [
+      {
+        "name": "__tests__",
+        "type": "directory",
+        "path": "src/__tests__",
+        "contents": [
+          {
+            "name": "controllers",
+            "type": "directory",
+            "path": "src/__tests__/controllers",
+            "contents": [
+              {
+                "name": "access.test.js",
+                "type": "file",
+                "path": "src/__tests__/controllers/access.test.js"
+              }
+            ]
+          },
+          {
+            "name": "inventoryAct.test.js",
+            "type": "file",
+            "path": "src/__tests__/inventoryAct.test.js"
+          }
+        ]
+      },
+      {
+        "name": "app.js",
+        "type": "file",
+        "path": "src/app.js"
+      },
+      {
+        "name": "auth",
+        "type": "directory",
+        "path": "src/auth",
+        "contents": [
+          {
+            "name": "authUtils.js",
+            "type": "file",
+            "path": "src/auth/authUtils.js"
+          }
+        ]
+      },
+      {
+        "name": "configs",
+        "type": "directory",
+        "path": "src/configs",
+        "contents": [
+          {
+            "name": "config.mongodb.js",
+            "type": "file",
+            "path": "src/configs/config.mongodb.js"
+          }
+        ]
+      },
+      {
+        "name": "controllers",
+        "type": "directory",
+        "path": "src/controllers",
+        "contents": [
+          {
+            "name": "access.controller.js",
+            "type": "file",
+            "path": "src/controllers/access.controller.js"
+          },
+          {
+            "name": "inventoryAct.controller.js",
+            "type": "file",
+            "path": "src/controllers/inventoryAct.controller.js"
+          },
+          {
+            "name": "inventoryItems.controller.js",
+            "type": "file",
+            "path": "src/controllers/inventoryItems.controller.js"
+          },
+          {
+            "name": "items.controller.js",
+            "type": "file",
+            "path": "src/controllers/items.controller.js"
+          },
+          {
+            "name": "order.controller.js",
+            "type": "file",
+            "path": "src/controllers/order.controller.js"
+          },
+          {
+            "name": "report.controller.js",
+            "type": "file",
+            "path": "src/controllers/report.controller.js"
+          },
+          {
+            "name": "user.controller.js",
+            "type": "file",
+            "path": "src/controllers/user.controller.js"
+          }
+        ]
+      },
+      {
+        "name": "core",
+        "type": "directory",
+        "path": "src/core",
+        "contents": [
+          {
+            "name": "error.response.js",
+            "type": "file",
+            "path": "src/core/error.response.js"
+          },
+          {
+            "name": "success.response.js",
+            "type": "file",
+            "path": "src/core/success.response.js"
+          }
+        ]
+      },
+      {
+        "name": "dbs",
+        "type": "directory",
+        "path": "src/dbs",
+        "contents": [
+          {
+            "name": "init.mongodb.js",
+            "type": "file",
+            "path": "src/dbs/init.mongodb.js"
+          }
+        ]
+      },
+      {
+        "name": "helpers",
+        "type": "directory",
+        "path": "src/helpers",
+        "contents": [
+          {
+            "name": "asyncHandler.js",
+            "type": "file",
+            "path": "src/helpers/asyncHandler.js"
+          },
+          {
+            "name": "check.connect.js",
+            "type": "file",
+            "path": "src/helpers/check.connect.js"
+          }
+        ]
+      },
+      {
+        "name": "middlewares",
+        "type": "directory",
+        "path": "src/middlewares",
+        "contents": [
+          {
+            "name": "checkRole.middleware.js",
+            "type": "file",
+            "path": "src/middlewares/checkRole.middleware.js"
+          },
+          {
+            "name": "error.middleware.js",
+            "type": "file",
+            "path": "src/middlewares/error.middleware.js"
+          }
+        ]
+      },
+      {
+        "name": "models",
+        "type": "directory",
+        "path": "src/models",
+        "contents": [
+          {
+            "name": "incomeDReport.model.js",
+            "type": "file",
+            "path": "src/models/incomeDReport.model.js"
+          },
+          {
+            "name": "incomeMReport.model.js",
+            "type": "file",
+            "path": "src/models/incomeMReport.model.js"
+          },
+          {
+            "name": "invReportItem.model.js",
+            "type": "file",
+            "path": "src/models/invReportItem.model.js"
+          },
+          {
+            "name": "inventoryComeVoucher.model.js",
+            "type": "file",
+            "path": "src/models/inventoryComeVoucher.model.js"
+          },
+          {
+            "name": "inventoryDReport.model.js",
+            "type": "file",
+            "path": "src/models/inventoryDReport.model.js"
+          },
+          {
+            "name": "inventoryDeleteVoucher.model.js",
+            "type": "file",
+            "path": "src/models/inventoryDeleteVoucher.model.js"
+          },
+          {
+            "name": "inventoryItem.model.js",
+            "type": "file",
+            "path": "src/models/inventoryItem.model.js"
+          },
+          {
+            "name": "inventoryLeaveVoucher.model.js",
+            "type": "file",
+            "path": "src/models/inventoryLeaveVoucher.model.js"
+          },
+          {
+            "name": "item.model.js",
+            "type": "file",
+            "path": "src/models/item.model.js"
+          },
+          {
+            "name": "keyStore.model.js",
+            "type": "file",
+            "path": "src/models/keyStore.model.js"
+          },
+          {
+            "name": "order.model.js",
+            "type": "file",
+            "path": "src/models/order.model.js"
+          },
+          {
+            "name": "orderItem.model.js",
+            "type": "file",
+            "path": "src/models/orderItem.model.js"
+          },
+          {
+            "name": "repositories",
+            "type": "directory",
+            "path": "src/models/repositories",
+            "contents": [
+              {
+                "name": "inventoryActivities.repo.js",
+                "type": "file",
+                "path": "src/models/repositories/inventoryActivities.repo.js"
+              },
+              {
+                "name": "inventoryItem.repo.js",
+                "type": "file",
+                "path": "src/models/repositories/inventoryItem.repo.js"
+              },
+              {
+                "name": "item.repo.js",
+                "type": "file",
+                "path": "src/models/repositories/item.repo.js"
+              },
+              {
+                "name": "order.repo.js",
+                "type": "file",
+                "path": "src/models/repositories/order.repo.js"
+              },
+              {
+                "name": "report.repo.js",
+                "type": "file",
+                "path": "src/models/repositories/report.repo.js"
+              }
+            ]
+          },
+          {
+            "name": "user.model.js",
+            "type": "file",
+            "path": "src/models/user.model.js"
+          }
+        ]
+      },
+      {
+        "name": "routes",
+        "type": "directory",
+        "path": "src/routes",
+        "contents": [
+          {
+            "name": "access",
+            "type": "directory",
+            "path": "src/routes/access",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/routes/access/index.js"
+              }
+            ]
+          },
+          {
+            "name": "account",
+            "type": "directory",
+            "path": "src/routes/account",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/routes/account/index.js"
+              }
+            ]
+          },
+          {
+            "name": "index.js",
+            "type": "file",
+            "path": "src/routes/index.js"
+          },
+          {
+            "name": "inventory",
+            "type": "directory",
+            "path": "src/routes/inventory",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/routes/inventory/index.js"
+              },
+              {
+                "name": "index01.js",
+                "type": "file",
+                "path": "src/routes/inventory/index01.js"
+              }
+            ]
+          },
+          {
+            "name": "items",
+            "type": "directory",
+            "path": "src/routes/items",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/routes/items/index.js"
+              }
+            ]
+          },
+          {
+            "name": "order",
+            "type": "directory",
+            "path": "src/routes/order",
+            "contents": [
+              {
+                "name": "order.js",
+                "type": "file",
+                "path": "src/routes/order/order.js"
+              }
+            ]
+          },
+          {
+            "name": "report",
+            "type": "directory",
+            "path": "src/routes/report",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/routes/report/index.js"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "services",
+        "type": "directory",
+        "path": "src/services",
+        "contents": [
+          {
+            "name": "access.service.js",
+            "type": "file",
+            "path": "src/services/access.service.js"
+          },
+          {
+            "name": "inventoryActivity.service.js",
+            "type": "file",
+            "path": "src/services/inventoryActivity.service.js"
+          },
+          {
+            "name": "inventoryItem.service.js",
+            "type": "file",
+            "path": "src/services/inventoryItem.service.js"
+          },
+          {
+            "name": "item.service.js",
+            "type": "file",
+            "path": "src/services/item.service.js"
+          },
+          {
+            "name": "keyStore.service.js",
+            "type": "file",
+            "path": "src/services/keyStore.service.js"
+          },
+          {
+            "name": "order.service.js",
+            "type": "file",
+            "path": "src/services/order.service.js"
+          },
+          {
+            "name": "report.service.js",
+            "type": "file",
+            "path": "src/services/report.service.js"
+          },
+          {
+            "name": "socket.service.js",
+            "type": "file",
+            "path": "src/services/socket.service.js"
+          },
+          {
+            "name": "user.service.js",
+            "type": "file",
+            "path": "src/services/user.service.js"
+          }
+        ]
+      },
+      {
+        "name": "utils",
+        "type": "directory",
+        "path": "src/utils",
+        "contents": [
+          {
+            "name": "index.js",
+            "type": "file",
+            "path": "src/utils/index.js"
+          }
+        ]
+      },
+      {
+        "name": "validators",
+        "type": "directory",
+        "path": "src/validators",
+        "contents": [
+          {
+            "name": "access",
+            "type": "directory",
+            "path": "src/validators/access",
+            "contents": [
+              {
+                "name": "index.js",
+                "type": "file",
+                "path": "src/validators/access/index.js"
+              }
+            ]
+          },
+          {
+            "name": "index.js",
+            "type": "file",
+            "path": "src/validators/index.js"
+          }
+        ]
+      }
+    ]
+  }
+]
