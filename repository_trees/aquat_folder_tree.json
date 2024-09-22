@@ -1,0 +1,22 @@
+[
+  {
+    "name": "BaseFragment.kt",
+    "type": "file",
+    "path": "BaseFragment.kt"
+  },
+  {
+    "name": "FarmerFragment.kt",
+    "type": "file",
+    "path": "FarmerFragment.kt"
+  },
+  {
+    "name": "SignUpFragment.kt",
+    "type": "file",
+    "path": "SignUpFragment.kt"
+  },
+  {
+    "name": "SignUpViewModel.kt",
+    "type": "file",
+    "path": "SignUpViewModel.kt"
+  }
+]

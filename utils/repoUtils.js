@@ -4,7 +4,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 
 // Fetch directory tree recursively
-const fetchDirectoryTree = async (owner, repo, dirPath = '', accessToken) => {
+const fetchDirectoryTreeFull = async (owner, repo, dirPath = '', accessToken) => {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}`;
     const response = await fetch(apiUrl, {
         headers: {
@@ -21,7 +21,7 @@ const fetchDirectoryTree = async (owner, repo, dirPath = '', accessToken) => {
                 name: item.name,
                 type: 'directory',
                 path: item.path,
-                contents: await fetchDirectoryTree(owner, repo, item.path, accessToken)
+                contents: await fetchDirectoryTreeFull(owner, repo, item.path, accessToken)
             };
         } else {
             return { name: item.name, type: 'file', path: item.path };
@@ -30,6 +30,14 @@ const fetchDirectoryTree = async (owner, repo, dirPath = '', accessToken) => {
     
     return tree;
 };
+
+async function fetchDirectoryTree(owner, repo, path = '', accessToken) {
+    const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path, {
+        headers: { 'Authorization': 'token ' + accessToken }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse;
+}
 
 // Save folder tree to a JSON file
 const saveRepoTreeToFile = (tree, repoName) => {
@@ -41,4 +49,4 @@ const saveRepoTreeToFile = (tree, repoName) => {
     fs.writeFileSync(filePath, JSON.stringify(tree, null, 2));
 };
 
-module.exports = { fetchDirectoryTree, saveRepoTreeToFile };
+module.exports = { fetchDirectoryTreeFull, fetchDirectoryTree, saveRepoTreeToFile };
