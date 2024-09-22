@@ -45,8 +45,12 @@ const generativeModel = configuration.getGenerativeModel({
 });
 
 async function run() {
-  const context = JSON.parse(fs.readFileSync('./repository_trees/CanteenBECode_folder_tree.json', 'utf8'));
-  const query = `Please provide the order for creating unit tests for each file in the project with the following directory tree: ${JSON.stringify(context)} without explain`; 
+  const context = JSON.parse(
+    fs.readFileSync("./repository_trees/CanteenBECode_folder_tree.json", "utf8")
+  );
+  const query = `Please provide the order for creating unit tests for each file in the project with the following directory tree: ${JSON.stringify(
+    context
+  )} without explain`;
   const generatedResponse = await generateResponse(query);
   await client.end();
   console.log("Generated Response:", generatedResponse);

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form class="form form-data">
+      <div style="display: flex; align-items: center">
+        <label for="description">Description</label>
+        <textarea
+          name="description"
+          id="description"
+          required
+          style="height: 300px; width: 1000px"
+        >
+Ứng dụng web cho Cantin trường Đại học Khoa học Tự Nhiên – ĐHQG Tp.HCM được thiết kế để giải quyết các vấn đề trong quản lý bán hàng và phục vụ hơn 10.000 cán bộ và sinh viên mỗi ngày. Hệ thống giúp cải thiện quá trình phục vụ, thanh toán, quản lý kho, và kết toán cuối ngày. Các chức năng chính bao gồm:
+
+        ### Chức năng chung:
+        - Đăng nhập, đăng kí.
+        
+        ### Phía khách hàng:
+        - Xem thông tin mặt hàng (giá, mô tả).
+        - Bình luận và đánh giá sản phẩm.
+        - Thêm sản phẩm vào giỏ hàng và đặt hàng.
+        - Đặt chỗ tại bàn còn trống.
+        - Thanh toán online.
+        - Xem và chỉnh sửa thông tin cá nhân.
+        
+        ### Phía thu ngân:
+        - Quản lý mặt hàng (thêm, xóa, sửa).
+        - Quản lý xuất nhập kho, cập nhật số lượng tồn kho.
+        - Quản lý đặt chỗ của khách hàng.
+        - Quản lý doanh thu (thống kê mặt hàng bán chạy).
+        - Quản lý thanh toán (lưu thông tin hóa đơn).
+        - Quản lý marketing (thông báo và quảng bá sản phẩm).
+        
+        ### Phía quản trị viên:
+        - Quản lý tài khoản người dùng (thêm, xóa, sửa). 
+        
+        Hệ thống giúp tối ưu hóa quy trình phục vụ, giảm thiểu ùn tắc, quản lý hàng hóa hiệu quả, và nâng cao trải nghiệm người dùng.</textarea
+        >
+      </div>
+
+      <div>
+        <input type="file" accept="image/*" id="photo" name="photo" required />
+        <label for="photo">Choose new usecase image</label>
+      </div>
+
+      <div>
+        <button>Submit</button>
+      </div>
+    </form>
+
+    <div>
+      <p>TEST CASE OUTPUT:</p>
+      <div>
+        <textarea
+          name="response"
+          id="response"
+          required
+          style="height: 300px; width: 1000px"
+        ></textarea>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>
