@@ -177,4 +177,4 @@ router.post('/select', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports.repoRoutes = router;
