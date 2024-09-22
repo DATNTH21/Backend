@@ -5,7 +5,7 @@ const {
   HarmCategory,
 } = require("@google/generative-ai");
 const dotenv = require("dotenv");
-const { client, createTable } = require('./db/dbClient.js');
+const { client, createTable } = require("./db/dbClient.js");
 
 dotenv.config();
 
@@ -43,22 +43,22 @@ const generativeModel = configuration.getGenerativeModel({
   safetySettings,
 });
 
-
 async function generateResponse(query) {
-  const result = await generativeModel.generateContent(
-    `Question: ${query}`
-  );
+  const result = await generativeModel.generateContent(`Question: ${query}`);
 
   return result.response.text();
 }
 
 async function run() {
-  const context = JSON.parse(fs.readFileSync('./repository_trees/CanteenBECode_folder_tree.json', 'utf8'));
-  const query = `Please provide the order for creating unit tests for each file in the project with the following directory tree: ${JSON.stringify(context)} without explain`; 
+  const context = JSON.parse(
+    fs.readFileSync("./repository_trees/CanteenBECode_folder_tree.json", "utf8")
+  );
+  const query = `Please provide the order for creating unit tests for each file in the project with the following directory tree: ${JSON.stringify(
+    context
+  )} without explain`;
   const generatedResponse = await generateResponse(query);
   await client.end();
   console.log("Generated Response:", generatedResponse);
-
 }
 
 run();
