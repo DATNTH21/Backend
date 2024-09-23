@@ -9,14 +9,18 @@ const path = require('path');
 const app = express();
 
 // Session and passport setup
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.set('view engine', 'ejs');
+
 // Routes
 app.use('/auth', githubAuthRoutes);
 app.use('/repo', repoRoutes);
+// app.use('/gen', genRoutes);
 
 app.get('/', (req, res) => {
     if (req.isAuthenticated()) {
