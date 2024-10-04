@@ -21,9 +21,34 @@ formData.addEventListener("submit", async (e) => {
       data: form,
     });
 
+    const tableEl = document.getElementById("tables");
     if (res.data.status === "success") {
-      console.log(res.data.data);
-      responseEl.innerText = JSON.stringify(res.data.data["test_cases"]);
+      const testcases = res.data.data["testcases"].flat();
+      for (const testcase of testcases) {
+        tableEl.insertAdjacentHTML(
+          "beforeend",
+          `
+        <table class="table">
+          <tr>
+            <th>test case description</th>
+            <th>${testcase["test_case_description"]}</th>
+          </tr>
+          <tr>
+            <td>Pre conditions</td>
+            <td>${JSON.stringify(testcase["pre-conditions"])}</td>
+          </tr>
+          <tr>
+            <td>Steps</td>
+            <td>${JSON.stringify(testcase["steps"])}</td>
+          </tr>
+          <tr>
+            <td>Expected result</td>
+            <td>${JSON.stringify(testcase["expected_result"])}</td>
+          </tr>
+        </table>
+        `
+        );
+      }
     }
   } catch (err) {
     console.log("error", err.response.data.message);

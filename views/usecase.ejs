@@ -4,6 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .table {
+        margin-bottom: 24px;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
   </head>
   <body>
     <form class="form form-data">
@@ -37,14 +59,7 @@
 
     <div>
       <p>TEST CASE OUTPUT:</p>
-      <div>
-        <textarea
-          name="response"
-          id="response"
-          required
-          style="height: 300px; width: 1000px"
-        ></textarea>
-      </div>
+      <div id="tables"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>

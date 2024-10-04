@@ -144,12 +144,21 @@ exports.createTestcases = catchAsync(async (req, res, next) => {
     usecasesList.push(...makeUsecasesListFromRawData(rawUsecaseData));
   }
 
-  const test_cases = { description, usecasesList };
+  let testcases = [];
+  for (usecase of usecasesList.slice(0, 5)) {
+    const result = await model.generateContent(
+      `Generate 2 test case based on the project's description and the provided usecase. Output JSON object including following field: (test_case_id,test_case_description,pre-conditions,steps,expected_result). 
+      - Description: ${description}
+      - Use case: ${JSON.stringify(usecase)}`
+    );
+    console.log(extractJSON(result.response.text()));
+    testcases.push(JSON.parse(extractJSON(result.response.text())));
+  }
 
   res.status(200).json({
     status: "success",
     data: {
-      test_cases,
+      testcases,
     },
   });
 });
