@@ -5,8 +5,14 @@ formData.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const form = new FormData();
-  form.append("description", document.getElementById("description").value);
-  form.append("photo", document.getElementById("photo").files[0]);
+
+  for (file of document.getElementById("description").files) {
+    form.append("description", file);
+  }
+
+  for (file of document.getElementById("use-cases").files) {
+    form.append("use-cases", file);
+  }
 
   try {
     const res = await axios({

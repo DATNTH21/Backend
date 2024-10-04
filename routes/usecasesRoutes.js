@@ -6,8 +6,7 @@ const router = express.Router();
 router
   .route("/")
   .post(
-    usecasesController.uploadUsecasePhoto,
-    usecasesController.setUpPhoto,
+    usecasesController.uploadUsecaseFile,
     usecasesController.createTestcases
   );
 
