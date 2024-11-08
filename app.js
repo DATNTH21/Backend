@@ -1,13 +1,15 @@
 const path = require("path");
 const express = require("express");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const passport = require("passport");
+const cors = require("cors");
 
 const usecasesRouter = require("./routes/usecasesRoutes");
 const authRouter = require("./routes/authRoutes");
-const cors = require("cors");
+
+require("./config/googleStrategy");
+require("./config/JWTStrategy");
 
 const app = express();
 
@@ -15,32 +17,21 @@ app.use(morgan("dev"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.options("*", cors());
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 1 * 60 * 60 * 1000, // 1 hour
-    },
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_DB.replace(
-        "<PASSWORD>",
-        process.env.MONGO_PASSWORD
-      ),
-      ttl: 24 * 60 * 60, // 24 hours
-    }),
-  })
-);
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/usecases", usecasesRouter);

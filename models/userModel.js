@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
@@ -5,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please tell us your name!"],
+    // required: [true, "Please tell us your name!"],
   },
   email: {
     type: String,
@@ -24,19 +25,14 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
     select: false,
   },
-  passwordConfirm: {
-    type: String,
-    required: [true, "Please confirm your password!"],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: "Passwords are not the same!",
-    },
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  confirmationToken: String,
 });
 
 userSchema.pre("save", async function (next) {
@@ -44,9 +40,6 @@ userSchema.pre("save", async function (next) {
 
   // Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
-
-  this.passwordConfirm = undefined;
-
   next();
 });
 
@@ -83,11 +76,20 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  // console.log({ resetToken }, this.passwordResetToken);
-
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+userSchema.methods.createConfirmationToken = function () {
+  const token = crypto.randomBytes(256).toString("hex");
+
+  this.confirmationToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
