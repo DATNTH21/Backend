@@ -92,11 +92,13 @@ exports.confirmSignup = catchAsync(async (req, res, next) => {
     throw new Error("Token is invalid");
   }
 
-  // user.confirmationToken = undefined;
-  user.isVerified = true;
-  await user.save();
+  if (!user.isVerified) {
+    // user.confirmationToken = undefined;
+    user.isVerified = true;
+    await user.save();
 
-  await grantUserAccessToApp(res, user);
+    await grantUserAccessToApp(res, user);
+  }
   res.redirect("http://localhost:3000/all-project");
 });
 
