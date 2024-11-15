@@ -5,11 +5,13 @@ const morgan = require("morgan");
 const passport = require("passport");
 const cors = require("cors");
 
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controller/errorController");
+
 const usecasesRouter = require("./routes/usecasesRoutes");
 const authRouter = require("./routes/authRoutes");
 
 require("./config/googleStrategy");
-require("./config/JWTStrategy");
 
 const app = express();
 
@@ -49,5 +51,11 @@ app.get("/", (req, res) => {
     </div>`
   );
 });
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 module.exports = app;

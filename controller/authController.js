@@ -2,35 +2,10 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
-const verifyRefreshToken = require("../utils/verifyRefreshToken");
-const {
-  generateAccessToken,
-  generateAllTokens,
-} = require("../utils/generateTokens");
+const { generateAllTokens } = require("../utils/generateTokens");
 const Email = require("../utils/email");
 const setTokenCookies = require("../utils/setTokenCookies");
-
-const handleTokenExpiredError = async (req, res, next) => {
-  try {
-    const { tokenDetails } = await verifyRefreshToken(req.cookies.refreshToken);
-    const accessToken = generateAccessToken(tokenDetails._id); // renew access token
-    console.log(accessToken);
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 15 * 1000),
-      // secure: true,
-    });
-
-    res.status(200).json({
-      status: "success",
-      message: "Authenticated",
-    });
-  } catch (error) {
-    return res.status(401).json({
-      message: "Unauthorized",
-    });
-  }
-};
+const AppError = require("../utils/appError");
 
 const grantUserAccessToApp = async (res, user) => {
   const { accessToken, refreshToken, accessTokenExp, refreshTokenExp } =
@@ -70,10 +45,11 @@ exports.registerUser = catchAsync(async (req, res, next) => {
     console.error(err);
     newUser.confirmationToken = undefined;
     await newUser.save({ validateBeforeSave: false });
-    res.status(500).json({
-      status: "error",
-      message: "Error sending email!",
-    });
+
+    return next(
+      new AppError("There was an error sending the email. Try again later!"),
+      500
+    );
   }
 });
 
@@ -89,7 +65,7 @@ exports.confirmSignup = catchAsync(async (req, res, next) => {
   });
 
   if (!user) {
-    throw new Error("Token is invalid");
+    throw new AppError("Token is invalid", 401);
   }
 
   if (!user.isVerified) {
@@ -108,61 +84,58 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return res.status(401).json({
-      status: "error",
-      message: "Invalid email or password",
-    });
+    return next(new AppError("Invalid email or password", 401));
   }
 
   await grantUserAccessToApp(res, user);
+
   res.status(200).json({
     status: "success",
-    message: "Login successfully",
+    data: {
+      user,
+    },
   });
 });
 
-exports.isLoggedIn = async (req, res, next) => {
-  try {
-    console.log(req.cookies);
-    if (!req.cookies.accessToken || !req.cookies.refreshToken) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    // 1) Verify token
-    const accessTokenPayload = jwt.verify(
-      req.cookies.accessToken,
-      process.env.JWT_ACCESS_TOKEN_SECRET_KEY
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  // console.log(req.cookies);
+  if (!req.cookies.accessToken || !req.cookies.refreshToken) {
+    return next(
+      new AppError("You are not logged in. Please log in to get access", 401)
     );
-
-    // 2) Check if user still exists
-    const currentUser = await User.findById(accessTokenPayload._id);
-    if (!currentUser) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    // 3) Check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(accessTokenPayload.iat)) {
-      throw new Error("User recently changed password! Please log in again.");
-    }
-
-    return res.status(200).json({
-      message: "Authenticated",
-      data: currentUser,
-    });
-  } catch (error) {
-    console.log(error.name, "💥");
-    if (error.name === "TokenExpiredError") {
-      return handleTokenExpiredError(req, res, next);
-    }
-    return res.status(401).json({
-      message: "Unauthorized",
-    });
   }
-};
+
+  // 1) Verify token
+  const accessTokenPayload = jwt.verify(
+    req.cookies.accessToken,
+    process.env.JWT_ACCESS_TOKEN_SECRET_KEY
+  );
+
+  // 2) Check if user still exists
+  const currentUser = await User.findById(accessTokenPayload._id);
+  if (!currentUser) {
+    return next(
+      new AppError(
+        "The user belonging to this token does no longer exist.",
+        401
+      )
+    );
+  }
+
+  // 3) Check if user changed password after the token was issued
+  if (currentUser.changedPasswordAfter(accessTokenPayload.iat)) {
+    return next(
+      new AppError("User recently changed password! Please log in again.", 401)
+    );
+  }
+
+  return res.status(200).json({
+    status: "success",
+    data: {
+      user: currentUser,
+    },
+  });
+});
 
 // expired token
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzJjM2FhNzQ1ZjRkYTA3ZDA4NTM2MGIiLCJleHAiOjE3MzA5Njg3NjIsImlhdCI6MTczMDk2ODc0N30.neo_8xJvAYVf5DeUYqsetpmjnUEqqfr6pST78kcRIGM
