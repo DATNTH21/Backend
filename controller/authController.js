@@ -123,6 +123,7 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 
 exports.isLoggedIn = async (req, res, next) => {
   try {
+    console.log(req.cookies);
     if (!req.cookies.accessToken || !req.cookies.refreshToken) {
       return res.status(401).json({
         message: "Unauthorized",
@@ -150,6 +151,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
     return res.status(200).json({
       message: "Authenticated",
+      data: currentUser,
     });
   } catch (error) {
     console.log(error.name, "💥");
