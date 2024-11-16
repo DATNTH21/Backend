@@ -6,13 +6,22 @@ const handleTokenExpiredError = async (req, res, next) => {
   console.log("TokenExpiredError 💥");
 
   try {
-    const { tokenDetails } = await verifyRefreshToken(req.cookies.refreshToken);
-    const accessToken = generateAccessToken(tokenDetails._id); // renew access token
+    const { payload, newRefreshToken } = await verifyRefreshToken(
+      req.cookies.refreshToken
+    );
+    const { accessToken } = generateAccessToken(payload._id); // renew access token
     // console.log(accessToken);
+
+    if (newRefreshToken) {
+      console.log("session expired soon💥");
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + 15 * 1000),
-      // secure: true,
+      secure: process.env.NODE_ENV === "production",
     });
 
     res.status(200).json({

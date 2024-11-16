@@ -1,18 +1,8 @@
 const jwt = require("jsonwebtoken");
 const Session = require("../models/sessionModel");
-const generateAllTokens = async (user) => {
+const generateRefreshToken = async (userId) => {
   try {
-    const payload = { _id: user._id };
-
-    // Generate access token with expiration time
-    const accessTokenExp =
-      Math.floor(Date.now() / 1000) +
-      process.env.JWT_ACCESS_TOKEN_EXPIRES_IN * 60; // Set expiration to 15 minutes from now
-    const accessToken = jwt.sign(
-      { ...payload, exp: accessTokenExp },
-      process.env.JWT_ACCESS_TOKEN_SECRET_KEY
-      // { expiresIn: "15m" }
-    );
+    const payload = { _id: userId };
 
     // Generate refresh token with expiration time
     const refreshTokenExp =
@@ -24,24 +14,17 @@ const generateAllTokens = async (user) => {
       // { expiresIn: "5d" }
     );
 
-    await Session.findOneAndDelete({
-      userId: user._id,
-    });
+    await Session.findOneAndDelete({ userId });
 
     // Save New Refresh Token
     await new Session({
-      userId: user._id,
+      userId,
       token: refreshToken,
     }).save();
 
-    return Promise.resolve({
-      accessToken,
-      refreshToken,
-      accessTokenExp,
-      refreshTokenExp,
-    });
+    return { refreshToken, refreshTokenExp };
   } catch (error) {
-    return Promise.reject(error);
+    return error;
   }
 };
 
@@ -58,8 +41,8 @@ const generateAccessToken = (userId) => {
     // { expiresIn: "15m" }
   );
 
-  return accessToken;
+  return { accessToken, accessTokenExp };
 };
 
-exports.generateAllTokens = generateAllTokens;
+exports.generateRefreshToken = generateRefreshToken;
 exports.generateAccessToken = generateAccessToken;

@@ -1,7 +1,10 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20");
 const User = require("../models/userModel");
-const { generateAllTokens } = require("../utils/generateTokens");
+const {
+  generateRefreshToken,
+  generateAccessToken,
+} = require("../utils/generateTokens");
 
 passport.use(
   new GoogleStrategy(
@@ -24,8 +27,10 @@ passport.use(
           await user.save({ validateBeforeSave: false });
         }
         // // Generate JWT tokens
-        const { accessToken, refreshToken, accessTokenExp, refreshTokenExp } =
-          await generateAllTokens(user);
+        const { refreshToken, refreshTokenExp } = await generateRefreshToken(
+          user._id
+        );
+        const { accessToken, accessTokenExp } = generateAccessToken(user._id);
 
         return done(null, {
           user,

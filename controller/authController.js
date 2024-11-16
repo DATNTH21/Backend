@@ -2,14 +2,19 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
-const { generateAllTokens } = require("../utils/generateTokens");
+const {
+  generateRefreshToken,
+  generateAccessToken,
+} = require("../utils/generateTokens");
 const Email = require("../utils/email");
 const setTokenCookies = require("../utils/setTokenCookies");
 const AppError = require("../utils/appError");
 
 const grantUserAccessToApp = async (res, user) => {
-  const { accessToken, refreshToken, accessTokenExp, refreshTokenExp } =
-    await generateAllTokens(user);
+  const { refreshToken, refreshTokenExp } = await generateRefreshToken(
+    user._id
+  );
+  const { accessToken, accessTokenExp } = generateAccessToken(user._id);
   setTokenCookies(res, accessToken, refreshToken, refreshTokenExp);
 };
 
@@ -112,7 +117,9 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
   );
 
   // 2) Check if user still exists
-  const currentUser = await User.findById(accessTokenPayload._id);
+  const currentUser = await User.findById(accessTokenPayload._id).select(
+    "-confirmationToken"
+  );
   if (!currentUser) {
     return next(
       new AppError(
