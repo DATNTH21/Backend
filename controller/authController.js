@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
+const Session = require("../models/sessionModel");
 const {
   generateRefreshToken,
   generateAccessToken,
@@ -141,6 +142,35 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     data: {
       user: currentUser,
     },
+  });
+});
+
+exports.logout = catchAsync(async (req, res, next) => {
+  //Find user
+  const { refreshToken } = req.cookies;
+  // 1. Check if the refresh token exists in cookies
+  if (!refreshToken) {
+    return next(new AppError("You are not logged in.", 401));
+  }
+
+  // Delete the session using the refresh token
+  const session = await Session.findOneAndDelete({ token: refreshToken });
+
+  if (!session) {
+    return next(
+      new AppError("Session not found. User may already be logged out.", 404)
+    );
+  }
+
+  // Clear the cookies
+  res.setHeader("Set-Cookie", [
+    "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly",
+    "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly",
+  ]);
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
   });
 });
 

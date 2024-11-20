@@ -32,5 +32,6 @@ router.post("/api/v1/register", authController.registerUser);
 router.post("/api/v1/login", authController.loginUser);
 router.get("/confirmation/:token", authController.confirmSignup);
 router.get("/authenticate", authController.isLoggedIn);
+router.post("/api/v1/logout", authController.logout);
 
 module.exports = router;
