@@ -1,19 +1,37 @@
 const express = require("express");
 const passport = require("passport");
-require("../config/passportConfig"); // Import GitHub passport strategy
+const authController = require("../controller/authController");
+const setTokenCookies = require("../utils/setTokenCookies");
 
 const router = express.Router();
 
-// GitHub login route
-router.get("/github", passport.authenticate("github"));
-
-// GitHub callback route
 router.get(
-  "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/" }),
-  async (req, res) => {
-    res.redirect("/repo/list");
+  "/login/federated/google",
+  passport.authenticate("google", {
+    session: false,
+    scope: ["profile", "email"],
+  })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "http://localhost:3000/login",
+  }),
+  (req, res) => {
+    // Access user object and tokens from req.user
+    const { user, accessToken, refreshToken, refreshTokenExp } = req.user;
+    setTokenCookies(res, accessToken, refreshToken, refreshTokenExp);
+
+    res.redirect("http://localhost:3000/all-project");
   }
 );
+
+router.post("/api/v1/register", authController.registerUser);
+router.post("/api/v1/login", authController.loginUser);
+router.get("/confirmation/:token", authController.confirmSignup);
+router.get("/authenticate", authController.isLoggedIn);
+router.post("/api/v1/logout", authController.logout);
 
 module.exports = router;
