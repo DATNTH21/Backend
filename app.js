@@ -7,10 +7,13 @@ const cors = require("cors");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controller/errorController");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./utils/swagger"); // Import Swagger configuration
 
 const usecasesRouter = require("./routes/usecasesRoutes");
 const authRouter = require("./routes/authRoutes");
-
+const projectRouter = require("./routes/projectRoutes");
+const userRouter = require("./routes/userRoutes");
 require("./config/googleStrategy");
 
 const app = express();
@@ -38,6 +41,10 @@ app.use(cookieParser());
 // Routes
 app.use("/api/v1/usecases", usecasesRouter);
 app.use("/", authRouter);
+app.use("/", userRouter);
+app.use("/", projectRouter);
+app.use("/", projectRouter);
+
 app.get("/usecase", (req, res) => {
   res.render("usecase");
 });
@@ -51,6 +58,8 @@ app.get("/", (req, res) => {
     </div>`
   );
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
