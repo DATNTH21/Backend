@@ -43,3 +43,5 @@ SENDINBLUE_PASSWORD=<YOUR_SENDINBLUE_PASSWORD>
 ```bash
 npm start
 ```
+
+http://localhost:8080/api-docs/: SwaggerUI

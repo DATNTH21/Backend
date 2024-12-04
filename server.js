@@ -12,11 +12,14 @@ process.on("uncaughtException", (err) => {
 dotenv.config();
 
 const app = require("./app");
-
 const DB = process.env.MONGO_DB.replace(
   "<PASSWORD>",
   process.env.MONGO_PASSWORD
-);
+).replace(
+  "<YOUR_USERNAME>",
+  process.env.YOUR_USERNAME
+)
+;
 mongoose.connect(DB).then(() => console.log("DB connection successful!"));
 
 const port = process.env.PORT || 3000;

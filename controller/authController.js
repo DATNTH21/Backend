@@ -130,6 +130,16 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     );
   }
 
+  const refreshToken = await Session.findOne({
+    userId: accessTokenPayload._id,
+  });
+
+  if (!refreshToken) {
+    return next(
+      new AppError("Your session has expired. Please log in again.", 401)
+    );
+  }
+
   // 3) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(accessTokenPayload.iat)) {
     return next(
