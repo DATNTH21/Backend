@@ -8,7 +8,6 @@ const UseCaseSchema = new Schema({
   description: { type: String },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
-  test_cases: [{ type: Schema.Types.ObjectId, ref: 'TestCase' }] // Reference to related test cases
 });
 
 // Pre-save hook to generate custom use_case_id
