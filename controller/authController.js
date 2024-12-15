@@ -10,6 +10,7 @@ const {
 const Email = require("../utils/email");
 const setTokenCookies = require("../utils/setTokenCookies");
 const AppError = require("../utils/appError");
+const sendResponse = require("./responseController");
 
 const grantUserAccessToApp = async (res, user) => {
   const { refreshToken, refreshTokenExp } = await generateRefreshToken(
@@ -43,10 +44,11 @@ exports.registerUser = catchAsync(async (req, res, next) => {
     `;
     await new Email(newUser).send(htmlContent, "WiseTest Account Activation");
 
-    res.status(200).json({
-      status: "success",
-      message: "Token sent to email!",
-    });
+    sendResponse(res, 200, "Token sent to email!");
+    // res.status(200).json({
+    //   status: "success",
+    //   message: "Token sent to email!",
+    // });
   } catch (err) {
     console.error(err);
     newUser.confirmationToken = undefined;
@@ -95,12 +97,13 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 
   await grantUserAccessToApp(res, user);
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user,
-    },
-  });
+  return sendResponse(res, 200, "Login successfully", user);
+  // res.status(200).json({
+  //   status: "success",
+  //   data: {
+  //     user,
+  //   },
+  // });
 });
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
@@ -147,12 +150,13 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     );
   }
 
-  return res.status(200).json({
-    status: "success",
-    data: {
-      user: currentUser,
-    },
-  });
+  return sendResponse(res, 200, "Login successfully", currentUser);
+  // return res.status(200).json({
+  //   status: "success",
+  //   data: {
+  //     user: currentUser,
+  //   },
+  // });
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
@@ -178,10 +182,11 @@ exports.logout = catchAsync(async (req, res, next) => {
     "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly",
   ]);
 
-  res.status(200).json({
-    status: "success",
-    message: "Logged out successfully",
-  });
+  return sendResponse(res, 200, "Logged out successfully");
+  // res.status(200).json({
+  //   status: "success",
+  //   message: "Logged out successfully",
+  // });
 });
 
 // expired token

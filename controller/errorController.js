@@ -1,6 +1,7 @@
 const AppError = require("../utils/appError");
 const verifyRefreshToken = require("../utils/verifyRefreshToken");
 const { generateAccessToken } = require("../utils/generateTokens");
+const sendResponse = require("./responseController");
 
 const handleTokenExpiredError = async (req, res, next) => {
   console.log("TokenExpiredError 💥");
@@ -24,13 +25,10 @@ const handleTokenExpiredError = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    res.status(200).json({
-      status: "success",
-      message: "Authenticated",
-    });
+    sendResponse(res, 200, "Authenticated");
   } catch (err) {
     return res.status(401).json({
-      status: "fail",
+      status: "error",
       error: err,
       message: err.message,
     });
