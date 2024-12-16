@@ -35,16 +35,20 @@ exports.createProject = async (req, res) => {
 exports.getProjectsByUser = async (req, res) => {
   try {
     const userId = req.params.userId;
+    const { search } = req.query;
+    const query = { users: userId };
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" }; // Case-insensitive search
+    }
 
     // Get all projects associated with the user
-    const projects = await Project.find({ users: userId }).populate(
-      "use_cases"
-    );
+    const projects = await Project.find(query).populate("use_cases");
 
     if (projects.length === 0) {
       return sendResponse(
         res,
-        404,
+        200,
         "No projects found for this user",
         [],
         "No projects found for this user"
