@@ -151,7 +151,7 @@ exports.deleteProject = async (req, res) => {
 
     // Delete the project
     const deletedProject = await Project.findOneAndDelete({
-      project_id: projectId,
+      _id: projectId,
     });
 
     if (!deletedProject) {
