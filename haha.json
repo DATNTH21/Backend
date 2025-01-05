@@ -1,0 +1,82 @@
+finalTestcases: [
+  {
+    testCaseName: 'Successful Login',
+    objective: 'Verify a user can successfully log in with valid credentials.',
+    steps: [Array]
+  },
+  {
+    testCaseName: 'Incorrect Username Login Attempt',
+    objective: 'Verify that an incorrect username prevents login and displays an error message.',
+    steps: [Array],
+    expectedResult: 'The system should display an error message indicating invalid credentials and remain on the login page.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Incorrect Credentials Entry' by testing the specific case of an incorrect username with a valid password."
+  },
+  {
+    testCaseName: 'Incorrect Password Login Attempt',
+    objective: 'Verify that an incorrect password prevents login and displays an error message.',
+    steps: [Array],
+    expectedResult: 'The system should display an error message indicating invalid credentials and remain on the login page.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Incorrect Credentials Entry' by testing the specific case of an incorrect password with a valid username."
+  },
+  {
+    testCaseName: 'Incorrect Username and Password Login Attempt',
+    objective: 'Verify that incorrect username and password combination prevents login and displays an error message.',
+    steps: [Array],
+    expectedResult: 'The system should display an error message indicating invalid credentials and remain on the login page.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Incorrect Credentials Entry' by testing the case of both username and password being incorrect."
+  },
+  {
+    testCaseName: 'Empty Username and Password Fields',
+    objective: 'Verify that attempting to login with empty username and password fields results in an error message.',
+    steps: [Array],
+    expectedResult: 'The system should display an error message indicating that both username and password are required.',
+    reflect: 'yes',
+    explanation: "While not explicitly stating 'incorrect credentials', empty fields represent a form of invalid credentials and are a valid test case under the 'Incorrect Credentials Entry' scenario.  The error message is expected to indicate the failure to provide credentials."    
+  },
+  {
+    testCaseName: 'Successful Employee Update with Table Search',
+    objective: 'Verify that an employee can be successfully updated after searching via the employee table.',
+    steps: [Array]
+  },
+  {
+    testCaseName: 'Successful Employee Update with ID Search',
+    objective: 'Verify that an employee can be successfully updated after searching via employee ID.',
+    steps: [Array]
+  },
+  {
+    testCaseName: 'Employee ID Not Found',
+    objective: "Verify the system's response when an employee ID is not found during an update attempt.",
+    steps: [Array],
+    expectedResult: 'The system displays an appropriate error message indicating that the employee ID is not found.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the test scenario 'Employee ID not found'.  The objective, steps, and expected result all focus on verifying the system's behavior when an invalid employee ID is used. The test case accurately attempts to trigger the 'Employee ID not found' scenario and validates the expected system response."
+  },
+  {
+    testCaseName: 'Invalid Field Entered During Update - Employee ID',
+    objective: "Verify the system's response when an invalid employee ID is entered during the update process.",
+    steps: [Array],
+    expectedResult: 'The system displays an appropriate error message indicating that the employee ID is invalid or not found.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Invalid field entered during update' by specifically testing the invalid input of an employee ID during the update process.  The steps and expected result clearly align with the scenario."
+  },
+  {
+    testCaseName: 'Invalid Field Entered During Update - Employee Name',
+    objective: "Verify the system's response when an invalid employee name is entered during the update process.",
+    steps: [Array],
+    expectedResult: 'The system displays an appropriate error message indicating that the employee name field contains an invalid value. The employee information should not be updated.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Invalid field entered during update' by testing invalid input for the employee name field during the update process. The steps and expected result are relevant to the scenario."
+  },
+  {
+    testCaseName: 'Invalid Field Entered During Update - Employee Email',
+    objective: "Verify the system's response when an invalid email address is entered during the update process.",
+    steps: [Array],
+    expectedResult: 'The system displays an appropriate error message indicating that the email address is invalid. The employee information should not be updated.',
+    reflect: 'yes',
+    explanation: "This test case directly addresses the scenario of 'Invalid field entered during update' by focusing on invalid email input during the update. The steps and expected result clearly relate to the scenario."
+  }
+]
+}

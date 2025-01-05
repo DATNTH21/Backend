@@ -14,6 +14,7 @@ const usecasesRouter = require("./routes/usecasesRoutes");
 const authRouter = require("./routes/authRoutes");
 const projectRouter = require("./routes/projectRoutes");
 const userRouter = require("./routes/userRoutes");
+const testcaseRouter = require("./routes/testcaseRoutes");
 require("./config/googleStrategy");
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.options("*", cors());
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -44,6 +46,7 @@ app.use("/", authRouter);
 app.use("/", userRouter);
 app.use("/", projectRouter);
 app.use("/", projectRouter);
+app.use("/api/v1/testcases", testcaseRouter);
 
 app.get("/usecase", (req, res) => {
   res.render("usecase");
