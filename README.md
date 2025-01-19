@@ -2,9 +2,16 @@
 
 ## Installation
 
+- packages:
+
 ```bash
 npm install
 ```
+
+- redis (step by step):
+  - Pull image: `docker pull redis:7-alpine`
+  - Create a container named **redis** (or whatever you want): `docker run --name redis -p 6379:6379 -d redis:7-alpine`
+  - For subsequent runs: `docker start redis` (replace redis with your own container name)
 
 ## Usage
 
