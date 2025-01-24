@@ -28,7 +28,6 @@ class AuthService {
     if (existingUser) {
       throw new ConflictResponse("Email already exists", 1010105);
     }
-
     const hashedPassword = await BcryptHelper.hash(password);
 
     let user = await this.userModel.create({

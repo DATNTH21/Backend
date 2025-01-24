@@ -17,7 +17,7 @@ router.use(handleAsync(AccessMiddleware.checkAccess));
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/v1/users/{id}:
  *   get:
  *     summary: Get a user by ID
  *     tags: [Users]
@@ -49,7 +49,7 @@ router.get("/:id", handleAsync(userController.getUserById));
 
 /**
  * @swagger
- * /users:
+ * /api/v1/users:
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
@@ -76,7 +76,7 @@ router.post("/", handleAsync(userController.createNewUser));
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/v1/users/{id}:
  *   patch:
  *     summary: Update a user by ID
  *     tags: [Users]
@@ -110,7 +110,7 @@ router.patch("/:id", handleAsync(userController.updateUser));
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/v1/users/{id}:
  *   delete:
  *     summary: Delete a user by ID
  *     tags: [Users]

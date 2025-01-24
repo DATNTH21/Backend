@@ -1,3 +1,5 @@
+const ErrorResponseCore = require('../response/error/core.error.response');
+
 const sendErrorProd = (err, req, res) => {
   // Handle Operational Errors
   if (err instanceof ErrorResponseCore) {

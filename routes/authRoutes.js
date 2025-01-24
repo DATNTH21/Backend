@@ -13,7 +13,7 @@ const router = require("express").Router();
 
 /**
  * @swagger
- * /signup:
+ * /api/v1/signup:
  *   post:
  *     summary: Registers a new user
  *     tags: [Authentication]
@@ -38,7 +38,7 @@ router.post("/signup", handleAsync(AuthController.handleSignup));
 
 /**
  * @swagger
- * /login:
+ * /api/v1/login:
  *   post:
  *     summary: Logs in a user
  *     tags: [Authentication]
@@ -63,7 +63,7 @@ router.post("/login", handleAsync(AuthController.handleLogin));
 
 /**
  * @swagger
- * /invoke-new-tokens:
+ * /api/v1/invoke-new-tokens:
  *   post:
  *     summary: Refreshes authentication tokens
  *     tags: [Authentication]
@@ -80,10 +80,19 @@ router.post(
 
 /**
  * @swagger
- * /verify/send-otp:
+ * /api/v1/verify/send-otp:
  *   post:
  *     summary: Sends an OTP to verify email
  *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
  *     responses:
  *       200:
  *         description: OTP sent successfully
@@ -94,7 +103,7 @@ router.post("/verify/send-otp", handleAsync(AuthController.handleVerifyEmail));
 
 /**
  * @swagger
- * /verify/confirm-otp:
+ * /api/v1/verify/confirm-otp:
  *   post:
  *     summary: Confirms OTP for email verification
  *     tags: [Authentication]
@@ -105,6 +114,8 @@ router.post("/verify/send-otp", handleAsync(AuthController.handleVerifyEmail));
  *           schema:
  *             type: object
  *             properties:
+ *               email:
+ *                 type: string
  *               otp:
  *                 type: string
  *     responses:
@@ -117,7 +128,7 @@ router.post("/verify/confirm-otp", handleAsync(AuthController.handleVerifyOTP));
 
 /**
  * @swagger
- * /google/auth:
+ * /api/v1/google/auth:
  *   post:
  *     summary: Logs in a user using Google authentication
  *     tags: [Authentication]
@@ -134,7 +145,7 @@ router.post(
 
 /**
  * @swagger
- * /reset-password/send-otp:
+ * /api/v1/reset-password/send-otp:
  *   post:
  *     summary: Sends an OTP to reset password
  *     tags: [Authentication]
@@ -151,7 +162,7 @@ router.post(
 
 /**
  * @swagger
- * /reset-password/confirm-otp:
+ * /api/v1/reset-password/confirm-otp:
  *   post:
  *     summary: Confirms OTP for password reset
  *     tags: [Authentication]
@@ -177,7 +188,7 @@ router.post(
 
 /**
  * @swagger
- * /reset-password:
+ * /api/v1/reset-password:
  *   post:
  *     summary: Resets the user's password
  *     tags: [Authentication]
@@ -203,7 +214,7 @@ router.post(
 
 /**
  * @swagger
- * /logout:
+ * /api/v1/logout:
  *   post:
  *     summary: Logs out the user
  *     tags: [Authentication]

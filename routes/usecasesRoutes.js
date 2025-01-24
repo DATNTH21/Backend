@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /:
+ * /api/v1/usecases/:
  *   post:
  *     summary: Upload a use case file and create test cases
  *     description: Uploads a use case file and generates test cases based on the uploaded file.
