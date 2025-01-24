@@ -1,72 +1,21 @@
-const express = require("express");
-const passport = require("passport");
-const authController = require("../controller/authController");
-const setTokenCookies = require("../utils/setTokenCookies");
+const AuthController = require("../controller/auth.controller");
+const handleAsync = require("../utils/catchAsync");
+const AccessMiddleware = require("../middlewares/access.middleware");
 
-const router = express.Router();
+const router = require("express").Router();
 
 /**
  * @swagger
  * tags:
  *   name: Authentication
- *   description: The authentication API for registering, logging in, and managing users.
+ *   description: API for user authentication and account management
  */
 
 /**
  * @swagger
- * /login/federated/google:
- *   get:
- *     summary: Initiates Google login
- *     description: Redirects to Google for federated authentication
- *     tags: [Authentication]
- *     responses:
- *       200:
- *         description: Redirects to Google authentication page
- *       400:
- *         description: Bad request
- */
-router.get(
-  "/login/federated/google",
-  passport.authenticate("google", {
-    session: false,
-    scope: ["profile", "email"],
-  })
-);
-
-/**
- * @swagger
- * /auth/google/callback:
- *   get:
- *     summary: Callback from Google authentication
- *     description: Handles the Google authentication callback and sets tokens in cookies
- *     tags: [Authentication]
- *     responses:
- *       302:
- *         description: Redirects to the home page after successful login
- *       401:
- *         description: Unauthorized access
- */
-router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    session: false,
-    failureRedirect: "http://localhost:3000/login",
-  }),
-  (req, res) => {
-    // Access user object and tokens from req.user
-    const { user, accessToken, refreshToken, refreshTokenExp } = req.user;
-    setTokenCookies(res, accessToken, refreshToken, refreshTokenExp);
-
-    res.redirect("http://localhost:3000/all-project");
-  }
-);
-
-/**
- * @swagger
- * /api/v1/register:
+ * /signup:
  *   post:
  *     summary: Registers a new user
- *     description: Creates a new user account
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -81,18 +30,17 @@ router.get(
  *                 type: string
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User successfully registered
  *       400:
  *         description: Bad request
  */
-router.post("/api/v1/register", authController.registerUser);
+router.post("/signup", handleAsync(AuthController.handleSignup));
 
 /**
  * @swagger
- * /api/v1/login:
+ * /login:
  *   post:
- *     summary: Logs in an existing user
- *     description: Authenticates a user and returns an authentication token
+ *     summary: Logs in a user
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -107,60 +55,168 @@ router.post("/api/v1/register", authController.registerUser);
  *                 type: string
  *     responses:
  *       200:
- *         description: Login successful, returns user and token
+ *         description: Login successful
  *       400:
  *         description: Invalid credentials
  */
-router.post("/api/v1/login", authController.loginUser);
+router.post("/login", handleAsync(AuthController.handleLogin));
 
 /**
  * @swagger
- * /confirmation/{token}:
- *   get:
- *     summary: Confirms user signup
- *     description: Confirms the user's signup using a token
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: token
- *         required: true
- *         description: The confirmation token
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Confirmation successful
- *       400:
- *         description: Invalid token
- */
-router.get("/confirmation/:token", authController.confirmSignup);
-
-/**
- * @swagger
- * /authenticate:
- *   get:
- *     summary: Checks if the user is logged in
- *     description: Verifies if the user is authenticated
+ * /invoke-new-tokens:
+ *   post:
+ *     summary: Refreshes authentication tokens
  *     tags: [Authentication]
  *     responses:
  *       200:
- *         description: User is authenticated
+ *         description: Tokens refreshed successfully
  *       401:
- *         description: User is not authenticated
+ *         description: Unauthorized
  */
-router.get("/authenticate", authController.isLoggedIn);
+router.post(
+  "/invoke-new-tokens",
+  handleAsync(AuthController.handleInvokeNewTokens)
+);
 
 /**
  * @swagger
- * /api/v1/logout:
+ * /verify/send-otp:
+ *   post:
+ *     summary: Sends an OTP to verify email
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully
+ *       400:
+ *         description: Failed to send OTP
+ */
+router.post("/verify/send-otp", handleAsync(AuthController.handleVerifyEmail));
+
+/**
+ * @swagger
+ * /verify/confirm-otp:
+ *   post:
+ *     summary: Confirms OTP for email verification
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               otp:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP confirmed successfully
+ *       400:
+ *         description: Invalid OTP
+ */
+router.post("/verify/confirm-otp", handleAsync(AuthController.handleVerifyOTP));
+
+/**
+ * @swagger
+ * /google/auth:
+ *   post:
+ *     summary: Logs in a user using Google authentication
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Google login successful
+ *       400:
+ *         description: Google login failed
+ */
+router.post(
+  "/google/auth",
+  handleAsync(AuthController.handleLoginWithGoogle)
+);
+
+/**
+ * @swagger
+ * /reset-password/send-otp:
+ *   post:
+ *     summary: Sends an OTP to reset password
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully
+ *       400:
+ *         description: Failed to send OTP
+ */
+router.post(
+  "/reset-password/send-otp",
+  handleAsync(AuthController.handleSendOTPToResetPassword)
+);
+
+/**
+ * @swagger
+ * /reset-password/confirm-otp:
+ *   post:
+ *     summary: Confirms OTP for password reset
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               otp:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP confirmed successfully
+ *       400:
+ *         description: Invalid OTP
+ */
+router.post(
+  "/reset-password/confirm-otp",
+  handleAsync(AuthController.handleConfirmOTPToResetPassword)
+);
+
+/**
+ * @swagger
+ * /reset-password:
+ *   post:
+ *     summary: Resets the user's password
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *       400:
+ *         description: Password reset failed
+ */
+router.post(
+  "/reset-password",
+  handleAsync(AuthController.handleResetPassword)
+);
+
+/**
+ * @swagger
+ * /logout:
  *   post:
  *     summary: Logs out the user
- *     description: Logs out the current authenticated user
  *     tags: [Authentication]
  *     responses:
  *       200:
  *         description: Logout successful
+ *       401:
+ *         description: Unauthorized
  */
-router.post("/api/v1/logout", authController.logout);
+router.post(
+  "/logout",
+  handleAsync(AccessMiddleware.checkAccess),
+  handleAsync(AuthController.handleLogout)
+);
 
 module.exports = router;

@@ -1,97 +1,26 @@
-const crypto = require("crypto");
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose"); // Erase if already required
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    // required: [true, "Please tell us your name!"],
+// Declare the Schema of the Mongo model
+const userSchema = new mongoose.Schema(
+  {
+    slug: { type: String, default: "" },
+    email: { type: String, default: "" },
+    password: { type: String, default: "" },
+    name: { type: String, default: "" },
+    image: { type: String, default: "/avatar.jpeg" },
+    isVerified: { type: Boolean, default: false },
+    type_login: {
+      type: String,
+      default: "local",
+      enum: ["local", "google"],
+    },
+    google_id: { type: String, default: "" },
+    facebook_id: { type: String, default: "" },
   },
-  email: {
-    type: String,
-    required: [true, "Please provide your email!"],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, "Please provide a valid email!"],
-  },
-  photo: {
-    type: String,
-    default: "default.jpg",
-  },
-  password: {
-    type: String,
-    required: [true, "Please provide a password!"],
-    minlength: 8,
-    select: false,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  confirmationToken: String,
-});
-
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
-  // Hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-userSchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) return next();
-
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
-
-userSchema.methods.correctPassword = async function (
-  candidatePassword,
-  userPassword
-) {
-  return await bcrypt.compare(candidatePassword, userPassword);
-};
-
-userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-    return JWTTimestamp < changedTimestamp;
+  {
+    timestamps: true,
   }
-  return false;
-};
+);
 
-userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
-
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
-  return resetToken;
-};
-
-userSchema.methods.createConfirmationToken = function () {
-  const token = crypto.randomBytes(256).toString("hex");
-
-  this.confirmationToken = crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
-
-  return token;
-};
-
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+//Export the model
+module.exports = mongoose.model("user", userSchema);

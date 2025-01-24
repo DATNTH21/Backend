@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Session = require("../models/sessionModel");
+const Session = require("../models/accessModel");
 const generateRefreshToken = async (userId) => {
   try {
     const payload = { _id: userId };

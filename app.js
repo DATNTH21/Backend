@@ -42,10 +42,9 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/usecases", usecasesRouter);
-app.use("/", authRouter);
-app.use("/", userRouter);
-app.use("/", projectRouter);
-app.use("/", projectRouter);
+app.use("/api/v1", authRouter);
+app.use("/api/v1", userRouter);
+app.use("/api/v1", projectRouter);
 app.use("/api/v1/testcases", testcaseRouter);
 
 app.get("/usecase", (req, res) => {
