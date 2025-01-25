@@ -43,7 +43,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/usecases", usecasesRouter);
-app.use("/", authRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/", usecaseRouter);
 app.use("/api/v1", userRouter);
 app.use("/", projectRouter);
