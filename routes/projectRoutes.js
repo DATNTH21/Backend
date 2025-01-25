@@ -11,7 +11,7 @@ const projectController = require("../controller/projectController");
 
 /**
  * @swagger
- * /api/v1/projects:
+ * /projects:
  *   post:
  *     summary: Create a new project
  *     description: Creates a new project.
@@ -48,7 +48,7 @@ router.post("/projects", projectController.createProject);
 
 /**
  * @swagger
- * /api/v1/projects/user/{userId}:
+ * /projects/user/{userId}:
  *   get:
  *     summary: Get all projects for a specific user
  *     description: Retrieves all projects associated with the given user ID.
@@ -83,7 +83,7 @@ router.get("/projects/user/:userId", projectController.getProjectsByUser);
 
 /**
  * @swagger
- * /api/v1/projects/{projectId}:
+ * /projects/{projectId}:
  *   get:
  *     summary: Get a specific project by project_id
  *     description: Retrieves a specific project by its project ID.
@@ -116,7 +116,7 @@ router.get("/projects/:projectId", projectController.getProjectById);
 
 /**
  * @swagger
- * /api/v1/projects/{projectId}:
+ * /projects/{projectId}:
  *   patch:
  *     summary: Update a project
  *     description: Updates an existing project by its project ID.
@@ -151,7 +151,7 @@ router.patch("/projects/:projectId", projectController.updateProject);
 
 /**
  * @swagger
- * /api/v1/projects/{projectId}:
+ * /projects/{projectId}:
  *   delete:
  *     summary: Delete a project
  *     description: Deletes a project by its project ID.
@@ -173,7 +173,7 @@ router.delete("/projects/:projectId", projectController.deleteProject);
 
 /**
  * @swagger
- * /api/v1/projects/addUseCase:
+ * /projects/addUseCase:
  *   post:
  *     summary: Add use case to a project
  *     description: Adds a use case to a project.

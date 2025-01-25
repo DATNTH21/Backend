@@ -11,7 +11,7 @@ const UseCase = require("../models/usecaseModel"); // Import UseCase model
 
 /**
  * @swagger
- * /api/v1/usecases:
+ * /usecases:
  *   post:
  *     summary: Create a new use case
  *     description: Creates a new use case for a project.
@@ -57,7 +57,7 @@ router.post("/usecases", async (req, res) => {
 
 /**
  * @swagger
- * /api/v1/usecases/{useCaseId}:
+ * /usecases/{useCaseId}:
  *   get:
  *     summary: Get a specific use case by use_case_id
  *     description: Retrieves a specific use case by its use_case_id.
@@ -102,7 +102,7 @@ router.get("/usecases/:useCaseId", async (req, res) => {
 
 /**
  * @swagger
- * /api/v1/usecases/{useCaseId}:
+ * /usecases/{useCaseId}:
  *   patch:
  *     summary: Update a use case
  *     description: Updates an existing use case by its use_case_id.
@@ -156,7 +156,7 @@ router.patch("/usecases/:useCaseId", async (req, res) => {
 
 /**
  * @swagger
- * /api/v1/usecases/{useCaseId}:
+ * /usecases/{useCaseId}:
  *   delete:
  *     summary: Delete a use case
  *     description: Deletes a use case by its use_case_id.
