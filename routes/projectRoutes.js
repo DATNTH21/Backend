@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const projectController = require("../controller/projectController");
 
@@ -44,7 +44,7 @@ const projectController = require("../controller/projectController");
  *       400:
  *         description: Invalid input data
  */
-router.post('/projects', projectController.createProject);
+router.post("/projects", projectController.createProject);
 
 /**
  * @swagger
@@ -79,7 +79,7 @@ router.post('/projects', projectController.createProject);
  *       404:
  *         description: User not found
  */
-router.get('/projects/user/:userId', projectController.getProjectsByUser);
+router.get("/projects/user/:userId", projectController.getProjectsByUser);
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ router.get('/projects/user/:userId', projectController.getProjectsByUser);
  *       404:
  *         description: Project not found
  */
-router.get('/projects/:projectId', projectController.getProjectById);
+router.get("/projects/:projectId", projectController.getProjectById);
 
 /**
  * @swagger
@@ -147,7 +147,7 @@ router.get('/projects/:projectId', projectController.getProjectById);
  *       404:
  *         description: Project not found
  */
-router.patch('/projects/:projectId', projectController.updateProject);
+router.patch("/projects/:projectId", projectController.updateProject);
 
 /**
  * @swagger
@@ -169,7 +169,7 @@ router.patch('/projects/:projectId', projectController.updateProject);
  *       404:
  *         description: Project not found
  */
-router.delete('/projects/:projectId', projectController.deleteProject);
+router.delete("/projects/:projectId", projectController.deleteProject);
 
 /**
  * @swagger
@@ -199,6 +199,6 @@ router.delete('/projects/:projectId', projectController.deleteProject);
  *       404:
  *         description: Project or Use Case not found
  */
-router.post('/projects/addUseCase', projectController.addUseCaseToProject);
+router.post("/projects/addUseCase", projectController.addUseCaseToProject);
 
 module.exports = router;

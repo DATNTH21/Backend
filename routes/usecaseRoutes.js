@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const UseCase = require('../models/usecaseModel');  // Import UseCase model
+const UseCase = require("../models/usecaseModel"); // Import UseCase model
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ const UseCase = require('../models/usecaseModel');  // Import UseCase model
  *       400:
  *         description: Invalid input data
  */
-router.post('/usecases', async (req, res) => {
+router.post("/usecases", async (req, res) => {
   try {
     const { project_id, file, description } = req.body;
 
@@ -88,11 +88,11 @@ router.post('/usecases', async (req, res) => {
  *       404:
  *         description: Use case not found
  */
-router.get('/usecases/:useCaseId', async (req, res) => {
+router.get("/usecases/:useCaseId", async (req, res) => {
   try {
     const useCase = await UseCase.findById(req.params.useCaseId);
     if (!useCase) {
-      return res.status(404).json({ message: 'Use case not found' });
+      return res.status(404).json({ message: "Use case not found" });
     }
     res.status(200).json(useCase);
   } catch (error) {
@@ -135,7 +135,7 @@ router.get('/usecases/:useCaseId', async (req, res) => {
  *       404:
  *         description: Use case not found
  */
-router.patch('/usecases/:useCaseId', async (req, res) => {
+router.patch("/usecases/:useCaseId", async (req, res) => {
   try {
     const { file, description } = req.body;
     const updatedUseCase = await UseCase.findByIdAndUpdate(
@@ -145,7 +145,7 @@ router.patch('/usecases/:useCaseId', async (req, res) => {
     );
 
     if (!updatedUseCase) {
-      return res.status(404).json({ message: 'Use case not found' });
+      return res.status(404).json({ message: "Use case not found" });
     }
 
     res.status(200).json(updatedUseCase);
@@ -174,13 +174,15 @@ router.patch('/usecases/:useCaseId', async (req, res) => {
  *       404:
  *         description: Use case not found
  */
-router.delete('/usecases/:useCaseId', async (req, res) => {
+router.delete("/usecases/:useCaseId", async (req, res) => {
   try {
-    const deletedUseCase = await UseCase.findByIdAndDelete(req.params.useCaseId);
+    const deletedUseCase = await UseCase.findByIdAndDelete(
+      req.params.useCaseId
+    );
     if (!deletedUseCase) {
-      return res.status(404).json({ message: 'Use case not found' });
+      return res.status(404).json({ message: "Use case not found" });
     }
-    res.status(200).json({ message: 'Use case deleted successfully' });
+    res.status(200).json({ message: "Use case deleted successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

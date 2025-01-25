@@ -1,18 +1,58 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/userModel"); // Import the User model
-const { protect } = require("../utils/auth"); // Middleware to protect the route
+const AccessMiddleware = require("../middlewares/access.middleware");
+const userController = require("../controller/user.controller");
+const handleAsync = require("../utils/catchAsync");
+const router = require("express").Router();
 
-// Change Password API
 /**
  * @swagger
- * /user/changePassword:
- *   put:
- *     summary: Change user password
- *     description: Allows the user to change their password by providing the current password and a new password.
- *     tags: [User]
- *     security:
- *       - BearerAuth: []
+ * tags:
+ *   name: Users
+ *   description: API for managing users
+ */
+
+/**
+ * Middleware to check access for all routes in this router
+ */
+router.use(handleAsync(AccessMiddleware.checkAccess));
+
+/**
+ * @swagger
+ * /api/v1/users/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *       404:
+ *         description: User not found
+ */
+router.get("/:id", handleAsync(userController.getUserById));
+
+/**
+ * @swagger
+ * /api/v1/users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -20,59 +60,73 @@ const { protect } = require("../utils/auth"); // Middleware to protect the route
  *           schema:
  *             type: object
  *             properties:
- *               currentPassword:
+ *               name:
  *                 type: string
- *                 description: The current password of the user
- *               newPassword:
+ *               email:
  *                 type: string
- *                 description: The new password the user wants to set
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid input
+ */
+router.post("/", handleAsync(userController.createNewUser));
+
+/**
+ * @swagger
+ * /api/v1/users/{id}:
+ *   patch:
+ *     summary: Update a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Password changed successfully
+ *         description: User updated successfully
  *       400:
- *         description: Invalid input or current password is incorrect
- *       401:
- *         description: Unauthorized, invalid or missing token
- *       500:
- *         description: Server error
+ *         description: Invalid input
+ *       404:
+ *         description: User not found
  */
-router.put("/changePassword", protect, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
+router.patch("/:id", handleAsync(userController.updateUser));
 
-    // Check if both currentPassword and newPassword are provided
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "Please provide both current and new passwords." });
-    }
-
-    // Find the user by the authenticated user ID
-    const user = await User.findById(req.user.id).select("+password"); // +password is used to include the password field in the query
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    // Check if the provided current password is correct
-    const isCorrectPassword = await user.correctPassword(currentPassword, user.password);
-    if (!isCorrectPassword) {
-      return res.status(400).json({ message: "Current password is incorrect." });
-    }
-
-    // Update the password
-    user.password = newPassword;
-    user.passwordChangedAt = Date.now(); // Set the time when the password was changed
-
-    // Save the updated user
-    await user.save();
-
-    // Send response back to the client
-    res.status(200).json({
-      message: "Password changed successfully.",
-      user: { name: user.name, email: user.email }, // You can send back user details if necessary
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+/**
+ * @swagger
+ * /api/v1/users/{id}:
+ *   delete:
+ *     summary: Delete a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ */
+router.delete("/:id", handleAsync(userController.deleteUser));
 
 module.exports = router;
