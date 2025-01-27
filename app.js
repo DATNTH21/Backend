@@ -4,9 +4,6 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const passport = require("passport");
 const cors = require("cors");
-
-const AppError = require("./utils/appError");
-const globalErrorHandler = require("./controller/errorController");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger"); // Import Swagger configuration
 

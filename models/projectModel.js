@@ -1,21 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ProjectSchema = new Schema({
-  project_id: { type: String, unique: true },
-  name: { type: String, required: true },
-  description: { type: String },
-  status: {
-    type: String,
-    enum: ["Generating", "Done", "Seen", "Failed", "Default"], // Allowed values
-    required: true,
-    default: "Default", // Default value
+const ProjectSchema = new Schema(
+  {
+    project_id: { type: String, unique: true },
+    name: { type: String, required: true },
+    description: { type: String },
+    status: {
+      type: String,
+      enum: ["Generating", "Done", "Seen", "Failed", "Default"],
+      required: true,
+      default: "Default",
+    },
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now },
+    use_cases: [{ type: Schema.Types.ObjectId, ref: "UseCase" }],
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
-  use_cases: [{ type: Schema.Types.ObjectId, ref: "UseCase" }],
-  users: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
-});
+  { collection: "Project" }
+);
 
 // Pre-save hook to generate custom project_id
 ProjectSchema.pre("save", async function (next) {

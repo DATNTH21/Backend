@@ -39,4 +39,4 @@ const accessSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model("access", accessSchema);
+module.exports = mongoose.model("Access", accessSchema);

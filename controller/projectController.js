@@ -2,19 +2,29 @@ const Project = require("../models/projectModel"); // Import the Project model
 const UseCase = require("../models/usecaseModel"); // Import the UseCase model
 const User = require("../models/userModel"); // Import the User model
 const sendResponse = require("./responseController");
+const {
+  BadRequestResponse,
+  ConflictResponse,
+  InternalServerErrorResponse,
+  NotFoundResponse,
+} = require("../response/error");
 
 // Create a new project
 exports.createProject = async (req, res) => {
   try {
-    const { name, description, status, users } = req.body;
+    //console.log(req.user);
+    const { name, description } = req.body;
+
+    //Validate project name here
 
     // Create a new project
     const newProject = new Project({
       name,
       description,
-      status,
-      users, // Array of user IDs associated with this project
+      user: req.user.id, // Array of user IDs associated with this project
     });
+
+    console.log("Project controller: ", newProject);
 
     // Save the project
     const savedProject = await newProject.save();
@@ -34,9 +44,10 @@ exports.createProject = async (req, res) => {
 // Get all projects for a specific user
 exports.getProjectsByUser = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    //const userId = req.params.userId;
+    const userId = req.user.id;
     const { search } = req.query;
-    const query = { users: userId };
+    const query = { user: userId };
 
     if (search) {
       query.name = { $regex: search, $options: "i" }; // Case-insensitive search
@@ -44,6 +55,8 @@ exports.getProjectsByUser = async (req, res) => {
 
     // Get all projects associated with the user
     const projects = await Project.find(query).populate("use_cases");
+
+    console.log(projects);
 
     if (projects.length === 0) {
       return sendResponse(
@@ -80,7 +93,7 @@ exports.getProjectById = async (req, res) => {
     // Find the project by its project_id
     const project = await Project.findOne({ _id: projectId })
       .populate("use_cases")
-      .populate("users"); // Populate the use_cases and users
+      .populate("user"); // Populate the use_cases and users
 
     if (!project) {
       return sendResponse(
@@ -108,12 +121,12 @@ exports.getProjectById = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const projectId = req.params.projectId;
-    const { name, description, status, users } = req.body;
+    const { name, description, status } = req.body;
 
     // Find the project and update it
     const updatedProject = await Project.findOneAndUpdate(
       { project_id: projectId },
-      { name, description, status, users, updated_at: Date.now() },
+      { name, description, status, updated_at: Date.now() },
       { new: true }
     );
 

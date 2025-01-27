@@ -1,7 +1,10 @@
 const express = require("express");
+const handleAsync = require("../utils/catchAsync");
 const router = express.Router();
 const projectController = require("../controller/projectController");
+const AccessMiddleware = require("../middlewares/access.middleware");
 
+router.use(handleAsync(AccessMiddleware.checkAccess));
 /**
  * @swagger
  * tags:
@@ -53,13 +56,6 @@ router.post("/projects", projectController.createProject);
  *     summary: Get all projects for a specific user
  *     description: Retrieves all projects associated with the given user ID.
  *     tags: [Projects]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: ID of the user to retrieve projects for
- *         schema:
- *           type: string
  *     responses:
  *       200:
  *         description: List of projects
@@ -79,7 +75,7 @@ router.post("/projects", projectController.createProject);
  *       404:
  *         description: User not found
  */
-router.get("/projects/user/:userId", projectController.getProjectsByUser);
+router.get("/projects", projectController.getProjectsByUser);
 
 /**
  * @swagger
