@@ -7,8 +7,8 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger"); // Import Swagger configuration
 
-const usecasesRouter = require("./routes/usecasesRoutes");
 const usecaseRouter = require("./routes/usecaseRoutes");
+const scenarioRouter = require("./routes/scenarioRoutes");
 const authRouter = require("./routes/authRoutes");
 const projectRouter = require("./routes/projectRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -39,8 +39,8 @@ app.use(passport.initialize());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/v1/usecases", usecasesRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/scenarios", scenarioRouter);
 app.use("/", usecaseRouter);
 app.use("/api/v1", userRouter);
 app.use("/", projectRouter);

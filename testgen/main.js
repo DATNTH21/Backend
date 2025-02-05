@@ -3,7 +3,7 @@ dotenv.config();
 
 const tcGen = require("./test-case-gen");
 
-async function generateTestCases(useCase) {
+exports.generateTestCases = async (useCase) => {
   const flows = await tcGen.analyzeUseCase(useCase);
   // console.log(JSON.stringify(flows));
 
@@ -37,6 +37,22 @@ async function generateTestCases(useCase) {
 
   const finalResult = [...mainFlowTestCases, ...finalValidatedTCs];
   return finalResult;
-}
+};
 
-module.exports = generateTestCases;
+exports.generateScenarios = async (useCase) => {
+  const flows = await tcGen.analyzeUseCase(useCase);
+  // console.log(JSON.stringify(flows));
+
+  const subFlowScenarios = await tcGen.generateSubFlowScenario(
+    flows["sub_flow"],
+    flows["main_flow"]
+  );
+  // console.log(subFlowScenarios);
+  const refinedScenarios = await tcGen.refineScenario(
+    subFlowScenarios,
+    useCase
+  );
+  // console.log(refinedScenarios);
+
+  return refinedScenarios;
+};

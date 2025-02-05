@@ -18,7 +18,7 @@ npm install
 1. Create a `.env` file in the root directory of the project with the following content, make sure to replace the placeholders with your own values (<YOUR_API_KEY>, <YOUR_USERNAME>, <YOUR_MONGO_CLUSTER_PASSWORD>, <YOUR_MAILTRAP_SMTP_USERNAME>, <YOUR_MAILTRAP_SMTP_PASSWORD>). We do not need <YOUR_SENDINBLUE_USERNAME> and <YOUR_SENDINBLUE_PASSWORD> for development, it's only for production:
 
 ```bash
-API_KEY=<YOUR_GEMINI_API_KEY>
+GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
 PORT=8080
 
 MONGO_DB=mongodb+srv://<YOUR_USERNAME>:<PASSWORD>@cluster0.pgh67.mongodb.net/blackboxtestgen?retryWrites=true&w=majority
