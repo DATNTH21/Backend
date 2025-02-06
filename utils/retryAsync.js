@@ -1,4 +1,4 @@
-const retries = 10,
+const retries = 20,
   delayMs = 2000;
 
 function delay(ms) {

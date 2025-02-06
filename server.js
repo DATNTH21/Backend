@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const { initializeSocket } = require("./socket");
+const cookie = require("cookie");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! 💥");
@@ -25,6 +26,12 @@ const io = initializeSocket(httpServer, {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
+});
+
+io.use((socket, next) => {
+  const { userId } = socket.handshake.auth;
+  console.log("userId: ", userId);
+  next();
 });
 
 const port = process.env.PORT || 3000;

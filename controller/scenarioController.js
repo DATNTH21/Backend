@@ -1,4 +1,5 @@
 const Scenario = require("../models/scenarioModel");
+const Project = require("../models/projectModel");
 const UseCase = require("../models/usecaseModel");
 const sendResponse = require("./responseController");
 
@@ -15,9 +16,14 @@ exports.generateScenarios = catchAsync(async (req, res) => {
     return sendResponse(res, 404, "Use cases not found", null);
   }
 
+  await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+    status: "Generating",
+  });
+
   await scenarioGenQueue.add(
     {
       usecases,
+      userId: req.user.id,
     },
     {
       backoff: {
@@ -32,7 +38,6 @@ exports.generateScenarios = catchAsync(async (req, res) => {
 });
 
 exports.getAllScenariosOfUC = async (req, res) => {
-  console.log("getAllScenariosOfUC");
   try {
     const { usecase_id } = req.query;
     const useCase = await UseCase.findOne({ use_case_id: usecase_id });
