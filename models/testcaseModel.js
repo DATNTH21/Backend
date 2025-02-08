@@ -3,26 +3,29 @@ const Schema = mongoose.Schema;
 
 const TestCaseSchema = new Schema(
   {
-    test_case_id: { type: String, unique: true, required: true },
-    use_case_id: {
+    test_case_id: { type: String, unique: true },
+    use_case: {
       type: Schema.Types.ObjectId,
       ref: "UseCase",
       required: true,
     },
-    description: { type: String, required: true },
-    pre_conditions: [String],
+    scenario: {
+      type: Schema.Types.ObjectId,
+      ref: "Scenario",
+      required: true,
+    },
+    name: { type: String, required: true },
+    objective: { type: String, required: true },
     steps: [String],
     expected_result: { type: String },
     tags: [String],
     priority: {
       type: String,
       enum: ["Low", "Medium", "High"], // Allowed values
-      required: true, // Mark field as required
     },
     status: {
       type: String,
       enum: ["In Progress", "Passed", "Failed"], // Allowed values
-      required: true, // Mark field as required
     },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
