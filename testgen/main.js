@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const tcGen = require("./test-case-gen");
+const ucnGen = require("./use-case-name-gen");
 
 exports.generateTestCases = async (useCase, scenario) => {
   const finalValidatedTCs = [];
@@ -33,4 +34,9 @@ exports.generateScenarios = async (useCase) => {
   // console.log(refinedScenarios);
 
   return refinedScenarios;
+};
+
+exports.generateUseCaseName = async (useCase) => {
+  const name = await ucnGen.generate(useCase);
+  return name;
 };
