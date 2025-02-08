@@ -1,41 +1,60 @@
+const mongoose = require("mongoose");
+
 const Scenario = require("../models/scenarioModel");
 const Project = require("../models/projectModel");
 const UseCase = require("../models/usecaseModel");
 const sendResponse = require("./responseController");
 
 const Bull = require("bull");
-const catchAsync = require("../utils/catchAsync");
 const scenarioGenQueue = new Bull("scenario-gen-queue");
 require("../worker/task_gen_scenario");
 
 // Create a new project
-exports.generateScenarios = catchAsync(async (req, res) => {
-  const { use_case_ids } = req.body;
-  const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
-  if (!usecases || usecases.length === 0) {
-    return sendResponse(res, 404, "Use cases not found", null);
-  }
+exports.generateScenarios = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
-    status: "Generating",
-  });
-
-  await scenarioGenQueue.add(
-    {
-      usecases,
-      userId: req.user.id,
-    },
-    {
-      backoff: {
-        type: "fixed",
-        delay: 1000,
-      },
-      attempts: 2,
+  try {
+    const { use_case_ids } = req.body;
+    const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
+    if (!usecases || usecases.length === 0) {
+      return sendResponse(res, 404, "Use cases not found", null);
     }
-  );
 
-  return sendResponse(res, 200, "Create project successfully", {});
-});
+    await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+      status: "Generating",
+    });
+
+    await scenarioGenQueue.add(
+      {
+        usecases,
+        userId: req.user.id,
+      },
+      {
+        backoff: {
+          type: "fixed",
+          delay: 1000,
+        },
+        attempts: 2,
+      }
+    );
+
+    await session.commitTransaction();
+    sendResponse(res, 200, "success", null);
+  } catch (error) {
+    await session.abortTransaction();
+    console.error("Transaction failed:", error);
+    sendResponse(
+      res,
+      500,
+      "Failed to generate test cases",
+      null,
+      error.message
+    );
+  } finally {
+    session.endSession();
+  }
+};
 
 exports.getAllScenariosOfUC = async (req, res) => {
   try {

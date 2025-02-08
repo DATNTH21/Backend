@@ -1,5 +1,5 @@
 const Bull = require("bull");
-const catchAsync = require("../utils/catchAsync");
+const mongoose = require("mongoose");
 const sendResponse = require("./responseController");
 const UseCase = require("../models/usecaseModel");
 const Project = require("../models/projectModel");
@@ -9,44 +9,67 @@ const testgenQueue = new Bull("test-gen-queue");
 require("../worker/task_gen_test");
 
 // testgenQueue.clean(3600 * 1000);
-exports.generateTestCases = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-  const use_case_ids = req.body.map((item) => item.use_case_id);
+exports.generateTestCases = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
+  try {
+    console.log(req.body);
+    const use_case_ids = req.body.map((item) => item.use_case_id);
 
-  if (!usecases || usecases.length === 0) {
-    return sendResponse(res, 404, "Use cases not found", null);
-  }
+    const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
 
-  const data = req.body.map((item) => ({
-    usecase: usecases.find(
-      (usecase) => usecase.use_case_id === item.use_case_id
-    ),
-    scenario_ids: item.scenario_ids,
-  }));
-
-  const projectId = usecases[0].project_id.toString();
-  await Project.findByIdAndUpdate(projectId, {
-    status: "Generating",
-  });
-
-  await testgenQueue.add(
-    {
-      data,
-      projectId,
-      userId: req.user.id,
-    },
-    {
-      backoff: {
-        type: "fixed",
-        delay: 1000,
-      },
-      attempts: 2,
+    if (!usecases || usecases.length === 0) {
+      return sendResponse(res, 404, "Use cases not found", null);
     }
-  );
-  sendResponse(res, 200, "success", null);
-});
+
+    const data = req.body.map((item) => ({
+      usecase: usecases.find(
+        (usecase) => usecase.use_case_id === item.use_case_id
+      ),
+      scenario_ids: item.scenario_ids,
+    }));
+
+    const projectId = usecases[0].project_id.toString();
+
+    await Project.findByIdAndUpdate(
+      projectId,
+      { status: "Generating" },
+      { session }
+    );
+
+    // Add job to queue
+    await testgenQueue.add(
+      {
+        data,
+        projectId,
+        userId: req.user.id,
+      },
+      {
+        backoff: {
+          type: "fixed",
+          delay: 1000,
+        },
+        attempts: 2,
+      }
+    );
+
+    await session.commitTransaction();
+    sendResponse(res, 200, "success", null);
+  } catch (error) {
+    await session.abortTransaction();
+    console.error("Transaction failed:", error);
+    sendResponse(
+      res,
+      500,
+      "Failed to generate test cases",
+      null,
+      error.message
+    );
+  } finally {
+    session.endSession();
+  }
+};
 
 exports.getAllTestCasesOfScenario = async (req, res) => {
   try {
