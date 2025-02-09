@@ -1,5 +1,7 @@
 const Bull = require("bull");
 const Scenario = require("../models/scenarioModel");
+const Project = require("../models/projectModel");
+
 const { generateScenarios } = require("../testgen/main");
 const scenarioGenQueue = new Bull("scenario-gen-queue");
 const { getIO } = require("../socket");
@@ -8,9 +10,8 @@ const { getIO } = require("../socket");
 
 scenarioGenQueue.process(async (job) => {
   const io = getIO();
-  const { usecases } = job.data;
+  const { usecases, userId } = job.data;
 
-  let progress = 0;
   for (const usecase of usecases) {
     const scenarios = await generateScenarios(usecase.description);
     for (const scenario of scenarios) {
@@ -19,24 +20,16 @@ scenarioGenQueue.process(async (job) => {
         content: scenario,
       });
     }
-
-    progress += Math.floor(100 / usecases.length);
-    // job.progress(progress);
-    // console.log({ type: typeof testCases, testCases });
   }
+
+  await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+    status: "Done",
+  });
+
+  io.to(`user:${userId}`).emit("scenario-generated", {
+    message: "Scenarios generated successfully",
+  });
 });
-
-// scenarioGenQueue.on("completed", async (job) => {
-//   console.log("completed 💥");
-//   const finalTestcases = await job.returnvalue;
-//   global.io.emit("job-completed", { testcases: finalTestcases });
-//   console.log("completed 💥", { finalTestcases });
-// });
-
-// scenarioGenQueue.on("progress", function (job, progress) {
-//   io.emit("scenario-progress", { jobId: job.id, progress });
-//   console.log(`💥Job ${job.id} is ${progress}% ready!`);
-// });
 
 scenarioGenQueue.on("stalled", function (job) {
   console.log(`💥Job ${job.id} is stalled`);
