@@ -13,6 +13,7 @@ const { generateRSAKeysForAccess } = require("../utils/crypto.util");
 const MongooseUtil = require("../utils/mongoose.util");
 const { generateOtpCode } = require("../utils/otpCode.util");
 const GoogleHelper = require("../utils/google.helper");
+const UserConfig = require("../models/userConfig");
 
 class AuthService {
   constructor() {
@@ -327,6 +328,16 @@ class AuthService {
           {
             refresh_token: refreshToken,
           }
+        );
+
+        // Generate user config:
+        const newUserConfig = UserConfig.create({
+          userId: newUser?._id,
+        });
+
+        console.log(
+          "Auth-service. login with google user config ",
+          newUserConfig
         );
         return {
           user: UserFilter.makeBasicFilter(newUser),

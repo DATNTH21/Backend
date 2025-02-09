@@ -3,6 +3,7 @@ const { OKSuccessResponse } = require("../response/success");
 const MongooseUtil = require("../utils/mongoose.util");
 const UserService = require("../services/user.service");
 const UserValidator = require("../validators/user.validator");
+const UserConfig = require("../models/userConfig");
 
 class UserController {
   constructor() {
@@ -27,6 +28,13 @@ class UserController {
         isVerified,
         image,
       });
+
+      // Create user config when create user
+      const newUserConfig = UserConfig.create({
+        userId: result._id,
+      });
+
+      console.log("Initial User Config when creating user: ", newUserConfig);
       return new OKSuccessResponse({
         message: "Create new user success",
         data: result,

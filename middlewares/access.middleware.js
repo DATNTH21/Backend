@@ -55,6 +55,8 @@ class AccessMiddleware {
 
       req.user = decodedToken;
       req.privateKey = foundAccess.private_key;
+
+      console.log(req.user);
       next();
     } catch (error) {
       console.log(error);

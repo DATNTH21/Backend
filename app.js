@@ -13,6 +13,7 @@ const authRouter = require("./routes/authRoutes");
 const projectRouter = require("./routes/projectRoutes");
 const userRouter = require("./routes/userRoutes");
 const testcaseRouter = require("./routes/testcaseRoutes");
+const userConfigRouter = require("./routes/userConfig.routes");
 require("./config/googleStrategy");
 
 const app = express();
@@ -42,9 +43,10 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/scenarios", scenarioRouter);
 app.use("/", usecaseRouter);
-app.use("/api/v1", userRouter);
+app.use("/api/v1/user", userRouter);
 app.use("/", projectRouter);
 app.use("/api/v1/testcases", testcaseRouter);
+app.use("/api/v1/user-config", userConfigRouter);
 
 app.get("/usecase", (req, res) => {
   res.render("usecase");
