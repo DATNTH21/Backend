@@ -42,8 +42,8 @@ router.use(handleAsync(AccessMiddleware.checkAccess));
  *       400:
  *         description: Invalid input data
  */
-router.post("/usecases", usecaseController.createUseCases);
+router.post("/", usecaseController.createUseCases);
 
-router.get("/usecases", usecaseController.getAllUseCases);
+router.get("/", usecaseController.getAllUseCases);
 
 module.exports = router;

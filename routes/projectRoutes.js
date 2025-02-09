@@ -47,7 +47,7 @@ router.use(handleAsync(AccessMiddleware.checkAccess));
  *       400:
  *         description: Invalid input data
  */
-router.post("/projects", projectController.createProject);
+router.post("/", projectController.createProject);
 
 /**
  * @swagger
@@ -75,7 +75,7 @@ router.post("/projects", projectController.createProject);
  *       404:
  *         description: User not found
  */
-router.get("/projects", projectController.getProjectsByUser);
+router.get("/", projectController.getProjectsByUser);
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.get("/projects", projectController.getProjectsByUser);
  *       404:
  *         description: Project not found
  */
-router.get("/projects/:projectId", projectController.getProjectById);
+router.get("/:projectId", projectController.getProjectById);
 
 /**
  * @swagger
@@ -143,7 +143,7 @@ router.get("/projects/:projectId", projectController.getProjectById);
  *       404:
  *         description: Project not found
  */
-router.patch("/projects/:projectId", projectController.updateProject);
+router.patch("/:projectId", projectController.updateProject);
 
 /**
  * @swagger
@@ -165,7 +165,7 @@ router.patch("/projects/:projectId", projectController.updateProject);
  *       404:
  *         description: Project not found
  */
-router.delete("/projects/:projectId", projectController.deleteProject);
+router.delete("/:projectId", projectController.deleteProject);
 
 /**
  * @swagger
@@ -195,6 +195,6 @@ router.delete("/projects/:projectId", projectController.deleteProject);
  *       404:
  *         description: Project or Use Case not found
  */
-router.post("/projects/addUseCase", projectController.addUseCaseToProject);
+router.post("/addUseCase", projectController.addUseCaseToProject);
 
 module.exports = router;
