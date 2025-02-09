@@ -16,4 +16,6 @@ router.post("/", scenarioController.generateScenarios);
 
 router.get("/", scenarioController.getAllScenariosOfUC);
 
+router.delete("/:scenarioId", scenarioController.deleteScenario);
+
 module.exports = router;

@@ -76,3 +76,21 @@ exports.getAllScenariosOfUC = async (req, res) => {
     );
   }
 };
+
+exports.deleteScenario = async (req, res) => {
+  try {
+    const { scenarioId } = req.params;
+
+    await Scenario.findByIdAndDelete(scenarioId);
+
+    return sendResponse(res, 200, "Scenario deleted successfully");
+  } catch (error) {
+    return sendResponse(
+      res,
+      500,
+      "Error deleting scenario",
+      undefined,
+      error.message
+    );
+  }
+};

@@ -31,6 +31,7 @@ exports.createProject = async (req, res) => {
 
     return sendResponse(res, 200, "Create project successfully", savedProject);
   } catch (error) {
+    console.log(error);
     return sendResponse(
       res,
       500,
