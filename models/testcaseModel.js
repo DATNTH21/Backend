@@ -14,6 +14,11 @@ const TestCaseSchema = new Schema(
       ref: "Scenario",
       required: true,
     },
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
     name: { type: String, required: true },
     objective: { type: String, required: true },
     steps: [String],

@@ -7,6 +7,9 @@ const AccessMiddleware = require("../middlewares/access.middleware");
 router.use(handleAsync(AccessMiddleware.checkAccess));
 
 router.post("/", testcaseController.generateTestCases);
-router.get("/", testcaseController.getAllTestCasesOfScenario);
+router.get("/", testcaseController.getAllTestCases);
+
+// id is mongo _id, not test_case_id
+router.patch("/:id", testcaseController.updateTestCase);
 
 module.exports = router;
