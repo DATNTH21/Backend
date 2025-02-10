@@ -133,3 +133,19 @@ exports.updateTestCase = async (req, res) => {
     );
   }
 };
+
+exports.deleteTestCase = async (req, res) => {
+  try {
+    await TestCase.findByIdAndDelete(req.params.id);
+
+    return sendResponse(res, 200, "Test case deleted successfully");
+  } catch (error) {
+    return sendResponse(
+      res,
+      500,
+      "Error deleting test case",
+      undefined,
+      error.message
+    );
+  }
+};

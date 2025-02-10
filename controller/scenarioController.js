@@ -6,6 +6,7 @@ const UseCase = require("../models/usecaseModel");
 const sendResponse = require("./responseController");
 
 const Bull = require("bull");
+const TestCase = require("../models/testcaseModel");
 const scenarioGenQueue = new Bull("scenario-gen-queue");
 require("../worker/task_gen_scenario");
 
@@ -81,6 +82,7 @@ exports.deleteScenario = async (req, res) => {
   try {
     const { scenarioId } = req.params;
 
+    await TestCase.deleteMany({ scenario: scenarioId });
     await Scenario.findByIdAndDelete(scenarioId);
 
     return sendResponse(res, 200, "Scenario deleted successfully");

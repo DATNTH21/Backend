@@ -11,5 +11,6 @@ router.get("/", testcaseController.getAllTestCases);
 
 // id is mongo _id, not test_case_id
 router.patch("/:id", testcaseController.updateTestCase);
+router.delete("/:id", testcaseController.deleteTestCase);
 
 module.exports = router;

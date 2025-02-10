@@ -27,6 +27,7 @@ const TestCaseSchema = new Schema(
     priority: {
       type: String,
       enum: ["Low", "Medium", "High"], // Allowed values
+      default: "Medium",
     },
     status: {
       type: String,
@@ -54,11 +55,13 @@ TestCaseSchema.post("save", async function () {
   });
 });
 
-TestCaseSchema.post("remove", async function () {
-  const Scenario = mongoose.model("Scenario");
-  await Scenario.findByIdAndUpdate(this.scenario, {
-    $inc: { test_cases_count: -1 },
-  });
+TestCaseSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    const Scenario = mongoose.model("Scenario");
+    await Scenario.findByIdAndUpdate(doc.scenario, {
+      $inc: { test_cases_count: -1 },
+    });
+  }
 });
 
 const TestCase = mongoose.model("TestCase", TestCaseSchema);
