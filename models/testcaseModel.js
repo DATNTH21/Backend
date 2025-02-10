@@ -47,5 +47,19 @@ TestCaseSchema.pre("save", async function (next) {
   next();
 });
 
+TestCaseSchema.post("save", async function () {
+  const Scenario = mongoose.model("Scenario");
+  await Scenario.findByIdAndUpdate(this.scenario, {
+    $inc: { test_cases_count: 1 },
+  });
+});
+
+TestCaseSchema.post("remove", async function () {
+  const Scenario = mongoose.model("Scenario");
+  await Scenario.findByIdAndUpdate(this.scenario, {
+    $inc: { test_cases_count: -1 },
+  });
+});
+
 const TestCase = mongoose.model("TestCase", TestCaseSchema);
 module.exports = TestCase;

@@ -11,6 +11,7 @@ const ScenarioSchema = new Schema(
       ref: "UseCase",
       required: true,
     },
+    test_cases_count: { type: Number, default: 0 },
   },
   { collection: "Scenario" }
 );

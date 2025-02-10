@@ -64,7 +64,7 @@ exports.getAllScenariosOfUC = async (req, res) => {
       return res.status(404).json({ message: "Use case not found" });
     }
     const scenarios = await Scenario.find({ use_case: useCase._id });
-
+    // console.log("scenarios", scenarios);
     return sendResponse(res, 200, "get all scenarios successfully", scenarios);
   } catch (error) {
     return sendResponse(
