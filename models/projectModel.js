@@ -14,11 +14,26 @@ const ProjectSchema = new Schema(
     },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
-    use_cases: [{ type: Schema.Types.ObjectId, ref: "UseCase" }],
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
   },
-  { collection: "Project" }
+  {
+    collection: "Project",
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+ProjectSchema.virtual("test_cases", {
+  ref: "TestCase",
+  foreignField: "project",
+  localField: "_id",
+});
+
+ProjectSchema.virtual("use_cases", {
+  ref: "UseCase",
+  foreignField: "project_id",
+  localField: "_id",
+});
 
 // Pre-save hook to generate custom project_id
 ProjectSchema.pre("save", async function (next) {

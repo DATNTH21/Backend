@@ -5,17 +5,17 @@ const TestCaseSchema = new Schema(
   {
     test_case_id: { type: String, unique: true },
     use_case: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "UseCase",
       required: true,
     },
     scenario: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Scenario",
       required: true,
     },
     project: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Project",
       required: true,
     },

@@ -6,7 +6,11 @@ const ScenarioSchema = new Schema(
     scenario_id: { type: String, unique: true },
     content: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
-    use_case: { type: Schema.Types.ObjectId, ref: "UseCase", required: true },
+    use_case: {
+      type: mongoose.Schema.ObjectId,
+      ref: "UseCase",
+      required: true,
+    },
   },
   { collection: "Scenario" }
 );
