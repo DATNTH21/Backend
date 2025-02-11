@@ -21,17 +21,23 @@ const TestCaseSchema = new Schema(
     },
     name: { type: String, required: true },
     objective: { type: String, required: true },
+    pre_condition: { type: String },
     steps: [String],
     expected_result: { type: String },
-    tags: [String],
     priority: {
       type: String,
-      enum: ["Low", "Medium", "High"], // Allowed values
-      default: "Medium",
     },
     status: {
       type: String,
-      enum: ["In Progress", "Passed", "Failed"], // Allowed values
+    },
+    tester: {
+      type: String,
+    },
+    test_date: {
+      type: String,
+    },
+    remarks: {
+      type: String,
     },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },

@@ -3,7 +3,7 @@ const { OKSuccessResponse } = require("../response/success");
 const MongooseUtil = require("../utils/mongoose.util");
 const UserService = require("../services/user.service");
 const UserValidator = require("../validators/user.validator");
-const UserConfig = require("../models/userConfig");
+const UserConfig = require("../models/userConfigModel");
 
 class UserController {
   constructor() {

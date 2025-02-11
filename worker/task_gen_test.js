@@ -25,7 +25,6 @@ testgenQueue.process(async (job) => {
         project: projectId,
         name: tc.testCaseName,
         expected_result: tc.expectedResult,
-        status: "In Progress",
       }));
 
       for (const tc of testCases) {

@@ -1,4 +1,4 @@
-const UserConfig = require("../models/userConfig");
+const UserConfig = require("../models/userConfigModel");
 const sendResponse = require("./responseController");
 
 exports.getUserConfig = async (req, res) => {
@@ -35,8 +35,7 @@ exports.getUserConfig = async (req, res) => {
 
 exports.addUserConfigOption = async (req, res) => {
   try {
-    const { field } = req.body;
-    const { type, name } = field;
+    const { type, name } = req.body;
     // Validate the 'type' parameter
     if (!["priority", "status"].includes(type)) {
       return sendResponse(
@@ -67,14 +66,15 @@ exports.addUserConfigOption = async (req, res) => {
     // Prevent changes to default values
     const defaultValues = {
       priority: [
-        { name: "Low", icon: "arrow-down" },
-        { name: "Medium", icon: "minus" },
-        { name: "High", icon: "arrow-up" },
+        { name: "Low", icon: "ChevronDown" },
+        { name: "Medium", icon: "Minus" },
+        { name: "High", icon: "ChevronUp" },
+        { name: "Critical", icon: "ChevronsUp" },
       ],
       status: [
-        { name: "In Progress", icon: "clock" },
-        { name: "Passed", icon: "check-circle" },
-        { name: "Failed", icon: "x-circle" },
+        { name: "In Progress", icon: "Timer" },
+        { name: "Pass", icon: "CheckCircle" },
+        { name: "Fail", icon: "CircleOff" },
       ],
     };
 
@@ -125,7 +125,7 @@ exports.addUserConfigOption = async (req, res) => {
 
 exports.deleteUserConfigOption = async (req, res) => {
   try {
-    const { type, name } = req.query;
+    const { type, name } = req.body;
 
     // Validate the 'type' parameter
     if (!["priority", "status"].includes(type)) {
@@ -157,14 +157,15 @@ exports.deleteUserConfigOption = async (req, res) => {
     // Prevent deletion of default values
     const defaultValues = {
       priority: [
-        { name: "Low", icon: "arrow-down" },
-        { name: "Medium", icon: "minus" },
-        { name: "High", icon: "arrow-up" },
+        { name: "Low", icon: "ChevronDown" },
+        { name: "Medium", icon: "Minus" },
+        { name: "High", icon: "ChevronUp" },
+        { name: "Critical", icon: "ChevronsUp" },
       ],
       status: [
-        { name: "In Progress", icon: "clock" },
-        { name: "Passed", icon: "check-circle" },
-        { name: "Failed", icon: "x-circle" },
+        { name: "In Progress", icon: "Timer" },
+        { name: "Pass", icon: "CheckCircle" },
+        { name: "Fail", icon: "CircleOff" },
       ],
     };
 
@@ -245,8 +246,9 @@ exports.updateTestCaseExportTemplate = async (req, res) => {
 
     const allowedFieldKeys = [
       "test_case_id",
-      "use_case_id",
-      "description",
+      "use_case",
+      "name",
+      "objective",
       "pre_condition",
       "steps",
       "expected_result",
