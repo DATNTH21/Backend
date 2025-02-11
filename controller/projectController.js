@@ -31,6 +31,7 @@ exports.createProject = async (req, res) => {
 
     return sendResponse(res, 200, "Create project successfully", savedProject);
   } catch (error) {
+    console.log(error);
     return sendResponse(
       res,
       500,
@@ -54,9 +55,17 @@ exports.getProjectsByUser = async (req, res) => {
     }
 
     // Get all projects associated with the user
-    const projects = await Project.find(query).populate("use_cases");
-
-    console.log(projects);
+    const projects = await Project.find(query)
+      .populate({
+        path: "use_cases",
+        select: "-__v",
+      })
+      .populate({
+        path: "test_cases",
+        select: "-__v",
+      });
+    console.log("query: ", query);
+    console.log("Projects: ", projects);
 
     if (projects.length === 0) {
       return sendResponse(

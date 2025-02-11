@@ -30,10 +30,10 @@ exports.generateTestCases = async (req, res) => {
       scenario_ids: item.scenario_ids,
     }));
 
-    const projectId = usecases[0].project_id.toString();
+    const projectId = usecases[0].project_id;
 
     await Project.findByIdAndUpdate(
-      projectId,
+      projectId.toString(),
       { status: "Generating" },
       { session }
     );
@@ -71,14 +71,33 @@ exports.generateTestCases = async (req, res) => {
   }
 };
 
-exports.getAllTestCasesOfScenario = async (req, res) => {
+exports.getAllTestCases = async (req, res) => {
   try {
-    const { scenario_id } = req.query;
-    const scenario = await Scenario.findOne({ scenario_id });
-    if (!scenario) {
-      return res.status(404).json({ message: "Scenario not found" });
+    const { scenario_id, use_case_id, project_id } = req.query;
+    let filter = {};
+    if (scenario_id) {
+      const scenario = await Scenario.findOne({ scenario_id });
+      if (!scenario) {
+        return sendResponse(res, 404, "scenario not found ", null);
+      }
+      filter.scenario = scenario._id;
     }
-    const testcases = await TestCase.find({ scenario: scenario._id });
+    if (use_case_id) {
+      const usecase = await UseCase.findOne({ use_case_id });
+      if (!usecase) {
+        return sendResponse(res, 404, "usecase not found ", null);
+      }
+      filter.use_case = usecase._id;
+    }
+    if (project_id) {
+      const project = await Project.findOne({ project_id });
+      if (!project) {
+        return sendResponse(res, 404, "project not found ", null);
+      }
+      filter.project = project._id;
+    }
+
+    const testcases = await TestCase.find(filter);
 
     return sendResponse(res, 200, "get all scenarios successfully", testcases);
   } catch (error) {
@@ -86,6 +105,29 @@ exports.getAllTestCasesOfScenario = async (req, res) => {
       res,
       500,
       "Failed to get scenarios",
+      undefined,
+      error.message
+    );
+  }
+};
+
+exports.updateTestCase = async (req, res) => {
+  try {
+    const testCase = await TestCase.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!testCase) {
+      return next(new AppError("No test case found with that id", 404));
+    }
+
+    return sendResponse(res, 200, "Test case updated successfully", testCase);
+  } catch (error) {
+    return sendResponse(
+      res,
+      500,
+      "Failed to update test case",
       undefined,
       error.message
     );

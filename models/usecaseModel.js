@@ -4,7 +4,11 @@ const Schema = mongoose.Schema;
 const UseCaseSchema = new Schema(
   {
     use_case_id: { type: String, unique: true },
-    project_id: { type: Schema.Types.ObjectId, ref: "Project", required: true }, // Refers to the associated project
+    project_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Project",
+      required: true,
+    }, // Refers to the associated project
     name: { type: String },
     description: { type: String },
     created_at: { type: Date, default: Date.now },

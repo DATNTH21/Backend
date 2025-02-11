@@ -5,13 +5,18 @@ const TestCaseSchema = new Schema(
   {
     test_case_id: { type: String, unique: true },
     use_case: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "UseCase",
       required: true,
     },
     scenario: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Scenario",
+      required: true,
+    },
+    project: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Project",
       required: true,
     },
     name: { type: String, required: true },
@@ -47,6 +52,20 @@ TestCaseSchema.pre("save", async function (next) {
     this.test_case_id = `TC-${count + 1}`; // Generate custom test_case_id
   }
   next();
+});
+
+TestCaseSchema.post("save", async function () {
+  const Scenario = mongoose.model("Scenario");
+  await Scenario.findByIdAndUpdate(this.scenario, {
+    $inc: { test_cases_count: 1 },
+  });
+});
+
+TestCaseSchema.post("remove", async function () {
+  const Scenario = mongoose.model("Scenario");
+  await Scenario.findByIdAndUpdate(this.scenario, {
+    $inc: { test_cases_count: -1 },
+  });
 });
 
 const TestCase = mongoose.model("TestCase", TestCaseSchema);

@@ -22,6 +22,7 @@ testgenQueue.process(async (job) => {
         ...tc,
         use_case: usecase._id,
         scenario: scenario._id,
+        project: projectId,
         name: tc.testCaseName,
         expected_result: tc.expectedResult,
       }));
