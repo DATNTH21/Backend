@@ -13,7 +13,7 @@ const { generateRSAKeysForAccess } = require("../utils/crypto.util");
 const MongooseUtil = require("../utils/mongoose.util");
 const { generateOtpCode } = require("../utils/otpCode.util");
 const GoogleHelper = require("../utils/google.helper");
-const UserConfig = require("../models/userConfig");
+const UserConfig = require("../models/userConfigModel");
 
 class AuthService {
   constructor() {

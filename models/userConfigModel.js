@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ConfigOptionSchema = new Schema({
-  name: { type: String, required: true }, // e.g., "High", "Low"
-  icon: { type: String, default: "default-icon" }, // e.g., "arrow-up", "alert-circle"
+  name: { type: String, required: true },
+  icon: { type: String, default: "CircleDot" },
 });
 
 // TestCaseExportTemplate column schema
@@ -13,8 +13,9 @@ const TestCaseExportColumnSchema = new Schema({
     required: true,
     enum: [
       "test_case_id",
-      "use_case_id",
-      "description",
+      "use_case",
+      "name",
+      "objective",
       "pre_condition",
       "steps",
       "expected_result",
@@ -47,17 +48,18 @@ const UserConfigSchema = new Schema(
 UserConfigSchema.pre("save", function (next) {
   if (!this.priority || this.priority.length === 0) {
     this.priority = [
-      { name: "Low", icon: "arrow-down" },
-      { name: "Medium", icon: "minus" },
-      { name: "High", icon: "arrow-up" },
+      { name: "Low", icon: "ChevronDown" },
+      { name: "Medium", icon: "Minus" },
+      { name: "High", icon: "ChevronUp" },
+      { name: "Critical", icon: "ChevronsUp" },
     ];
   }
 
   if (!this.status || this.status.length === 0) {
     this.status = [
-      { name: "In Progress", icon: "clock" },
-      { name: "Passed", icon: "check-circle" },
-      { name: "Failed", icon: "x-circle" },
+      { name: "In Progress", icon: "Timer" },
+      { name: "Pass", icon: "CheckCircle" },
+      { name: "Fail", icon: "CircleOff" },
     ];
   }
 
@@ -73,53 +75,59 @@ UserConfigSchema.pre("save", function (next) {
         visible: true,
       },
       {
-        fieldKey: "use_case_id",
-        displayName: "Use Case ID",
+        fieldKey: "use_case",
+        displayName: "Use Case",
         order: 1,
         visible: true,
       },
       {
-        fieldKey: "description",
-        displayName: "Description",
+        fieldKey: "name",
+        displayName: "Name",
         order: 2,
+        visible: true,
+      },
+      {
+        fieldKey: "objective",
+        displayName: "Objective",
+        order: 3,
         visible: true,
       },
       {
         fieldKey: "pre_condition",
         displayName: "Pre Condition",
-        order: 3,
+        order: 4,
         visible: false,
       },
-      { fieldKey: "steps", displayName: "Steps", order: 4, visible: true },
+      { fieldKey: "steps", displayName: "Steps", order: 5, visible: true },
       {
         fieldKey: "expected_result",
         displayName: "Expected Result",
-        order: 5,
+        order: 6,
         visible: true,
       },
       {
         fieldKey: "priority",
         displayName: "Priority",
-        order: 6,
+        order: 7,
         visible: true,
       },
-      { fieldKey: "status", displayName: "Status", order: 7, visible: true },
+      { fieldKey: "status", displayName: "Status", order: 8, visible: true },
       {
         fieldKey: "test_date",
         displayName: "Test Date",
-        order: 8,
+        order: 9,
         visible: false,
       },
       {
         fieldKey: "tester",
         displayName: "Tester",
-        order: 9,
+        order: 10,
         visible: false,
       },
       {
         fieldKey: "remarks",
         displayName: "Remarks",
-        order: 10,
+        order: 11,
         visible: false,
       },
     ];
