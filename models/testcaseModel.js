@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const getNextSequence = require("../utils/autoIncrementHelper");
 
 const TestCaseSchema = new Schema(
   {
@@ -45,11 +46,16 @@ const TestCaseSchema = new Schema(
   { collection: "TestCase" }
 );
 
-// Pre-save hook to generate custom test_case_id
 TestCaseSchema.pre("save", async function (next) {
   if (!this.test_case_id) {
-    const count = await mongoose.model("TestCase").countDocuments();
-    this.test_case_id = `TC-${count + 1}`; // Generate custom test_case_id
+    const session = await mongoose.startSession();
+    try {
+      await session.withTransaction(async () => {
+        this.test_case_id = await getNextSequence("testCaseId", "TC", session);
+      });
+    } finally {
+      session.endSession();
+    }
   }
   next();
 });

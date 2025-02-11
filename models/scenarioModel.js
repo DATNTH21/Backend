@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const getNextSequence = require("../utils/autoIncrementHelper");
 
 const ScenarioSchema = new Schema(
   {
@@ -16,23 +17,16 @@ const ScenarioSchema = new Schema(
   { collection: "Scenario" }
 );
 
-// Pre-save hook to generate custom scenario_id
 ScenarioSchema.pre("save", async function (next) {
   if (!this.scenario_id) {
-    // Find the highest scenario number
-    const highestScenario = await mongoose
-      .model("Scenario")
-      .findOne({}, { scenario_id: 1 })
-      .sort({ scenario_id: -1 });
-
-    let nextNumber = 1;
-    if (highestScenario && highestScenario.scenario_id) {
-      // Extract number from SC-X format and add 1
-      const currentNumber = parseInt(highestScenario.scenario_id.split("-")[1]);
-      nextNumber = currentNumber + 1;
+    const session = await mongoose.startSession();
+    try {
+      await session.withTransaction(async () => {
+        this.scenario_id = await getNextSequence("scenarioId", "SC", session);
+      });
+    } finally {
+      session.endSession();
     }
-
-    this.scenario_id = `SC-${nextNumber}`;
   }
   next();
 });

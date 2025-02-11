@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const { initializeSocket } = require("./socket");
-const cookie = require("cookie");
+const initializeCounters = require("./scripts/initCounters");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! 💥");
@@ -19,7 +19,10 @@ const DB = process.env.MONGO_DB.replace(
   "<PASSWORD>",
   process.env.MONGO_PASSWORD
 ).replace("<YOUR_USERNAME>", process.env.YOUR_USERNAME);
-mongoose.connect(DB).then(() => console.log("DB connection successful!"));
+mongoose.connect(DB).then(() => {
+  console.log("DB connection successful!");
+  initializeCounters();
+});
 
 const io = initializeSocket(httpServer, {
   cors: {
