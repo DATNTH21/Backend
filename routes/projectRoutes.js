@@ -4,6 +4,8 @@ const router = express.Router();
 const projectController = require("../controller/projectController");
 const AccessMiddleware = require("../middlewares/access.middleware");
 
+router.get("/:projectId/statistics", projectController.getProjectStats);
+
 router.use(handleAsync(AccessMiddleware.checkAccess));
 /**
  * @swagger

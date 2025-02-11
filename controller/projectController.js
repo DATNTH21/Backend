@@ -1,13 +1,10 @@
+const { name } = require("ejs");
 const Project = require("../models/projectModel"); // Import the Project model
+const Scenario = require("../models/scenarioModel");
+const TestCase = require("../models/testcaseModel");
 const UseCase = require("../models/usecaseModel"); // Import the UseCase model
 const User = require("../models/userModel"); // Import the User model
 const sendResponse = require("./responseController");
-const {
-  BadRequestResponse,
-  ConflictResponse,
-  InternalServerErrorResponse,
-  NotFoundResponse,
-} = require("../response/error");
 
 // Create a new project
 exports.createProject = async (req, res) => {
@@ -228,6 +225,70 @@ exports.addUseCaseToProject = async (req, res) => {
       500,
       "Error adding use case to project",
       undefined,
+      error.message
+    );
+  }
+};
+
+exports.getProjectStats = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return sendResponse(res, 404, "Project not found", null);
+    }
+
+    const totalTestCases = await TestCase.countDocuments({
+      project: project._id,
+    });
+
+    const useCases = await UseCase.find({ project_id: project._id });
+    const useCaseIds = useCases.map((uc) => uc._id);
+    const totalScenarios = await Scenario.countDocuments({
+      use_case: { $in: useCaseIds },
+    });
+
+    const statusCounts = await TestCase.aggregate([
+      {
+        $match: {
+          project: project._id,
+        },
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: "$_id",
+          count: 1,
+        },
+      },
+    ]);
+
+    const statistics = {
+      total_test_cases: totalTestCases,
+      total_scenarios: totalScenarios,
+      test_cases_by_status: statusCounts,
+    };
+
+    return sendResponse(
+      res,
+      200,
+      "Statistics retrieved successfully",
+      statistics
+    );
+  } catch (error) {
+    console.error("Error getting project statistics:", error);
+    return sendResponse(
+      res,
+      500,
+      "Error retrieving project statistics",
+      null,
       error.message
     );
   }
