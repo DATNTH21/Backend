@@ -28,6 +28,11 @@ ucNameGenQueue.on("stalled", function (job) {
 });
 
 ucNameGenQueue.on("failed", function (job, err) {
+  const io = getIO();
+  const { userId } = job.data;
+  io.to(`user:${userId}`).emit("use-case-failed", {
+    message: "Use case created failed",
+  });
   console.log(`💥Job ${job.id} failed`, err);
 });
 

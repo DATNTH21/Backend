@@ -23,7 +23,7 @@ exports.generateScenarios = async (req, res) => {
     }
 
     await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
-      status: "Generating",
+      status: "Generating scenarios",
     });
 
     await scenarioGenQueue.add(

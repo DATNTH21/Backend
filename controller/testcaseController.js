@@ -34,7 +34,7 @@ exports.generateTestCases = async (req, res) => {
 
     await Project.findByIdAndUpdate(
       projectId.toString(),
-      { status: "Generating" },
+      { status: "Generating test cases" },
       { session }
     );
 
