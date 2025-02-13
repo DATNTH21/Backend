@@ -17,25 +17,16 @@ const ScenarioSchema = new Schema(
   { collection: "Scenario" }
 );
 
-// ScenarioSchema.pre("save", async function (next) {
-//   if (!this.scenario_id) {
-//     const session = await mongoose.startSession();
-//     try {
-//       await session.withTransaction(async () => {
-//         this.scenario_id = await getNextSequence("scenarioId", "SC", session);
-//       });
-//     } finally {
-//       session.endSession();
-//     }
-//   }
-//   next();
-// });
-
-// Pre-save hook to generate custom scenario_id
 ScenarioSchema.pre("save", async function (next) {
   if (!this.scenario_id) {
-    const count = await mongoose.model("Scenario").countDocuments();
-    this.scenario_id = `SC-${count + 1}`; // Generate custom scenario_id
+    const session = await mongoose.startSession();
+    try {
+      await session.withTransaction(async () => {
+        this.scenario_id = await getNextSequence("scenarioId", "SC", session);
+      });
+    } finally {
+      session.endSession();
+    }
   }
   next();
 });
