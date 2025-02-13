@@ -46,16 +46,24 @@ const TestCaseSchema = new Schema(
   { collection: "TestCase" }
 );
 
+// TestCaseSchema.pre("save", async function (next) {
+//   if (!this.test_case_id) {
+//     const session = await mongoose.startSession();
+//     try {
+//       await session.withTransaction(async () => {
+//         this.test_case_id = await getNextSequence("testCaseId", "TC", session);
+//       });
+//     } finally {
+//       session.endSession();
+//     }
+//   }
+//   next();
+// });
+
 TestCaseSchema.pre("save", async function (next) {
   if (!this.test_case_id) {
-    const session = await mongoose.startSession();
-    try {
-      await session.withTransaction(async () => {
-        this.test_case_id = await getNextSequence("testCaseId", "TC", session);
-      });
-    } finally {
-      session.endSession();
-    }
+    const count = await mongoose.model("TestCase").countDocuments();
+    this.test_case_id = `TC-${count + 1}`; // Generate custom test_case_id
   }
   next();
 });

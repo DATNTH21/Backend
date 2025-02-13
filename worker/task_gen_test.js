@@ -59,7 +59,15 @@ testgenQueue.on("stalled", function (job) {
   console.log(`💥Job ${job.id} is stalled`);
 });
 
-testgenQueue.on("failed", function (job, err) {
+testgenQueue.on("failed", async function (job, err) {
+  const io = getIO();
+  const { projectId, userId } = job.data;
+  await Project.findByIdAndUpdate(projectId, {
+    status: "Failed",
+  });
+  io.to(`user:${userId}`).emit("test-cases-failed", {
+    message: "Test cases generated failed",
+  });
   console.log(`💥Job ${job.id} failed`, err);
 });
 

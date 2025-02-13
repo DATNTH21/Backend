@@ -35,7 +35,15 @@ scenarioGenQueue.on("stalled", function (job) {
   console.log(`💥Job ${job.id} is stalled`);
 });
 
-scenarioGenQueue.on("failed", function (job, err) {
+scenarioGenQueue.on("failed", async function (job, err) {
+  const io = getIO();
+  const { usecases, userId } = job.data;
+  await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+    status: "Failed",
+  });
+  io.to(`user:${userId}`).emit("scenario-failed", {
+    message: "Scenarios generated failed",
+  });
   console.log(`💥Job ${job.id} failed`, err);
 });
 
