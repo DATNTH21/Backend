@@ -3,7 +3,6 @@ const mongoose = require("mongoose"); // Erase if already required
 // Declare the Schema of the Mongo model
 const userSchema = new mongoose.Schema(
   {
-    slug: { type: String, default: "" },
     email: { type: String, default: "" },
     password: { type: String, default: "" },
     name: { type: String, default: "" },

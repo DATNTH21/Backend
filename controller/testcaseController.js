@@ -1,11 +1,10 @@
-const Bull = require("bull");
 const mongoose = require("mongoose");
 const sendResponse = require("./responseController");
 const UseCase = require("../models/usecaseModel");
 const Project = require("../models/projectModel");
 const Scenario = require("../models/scenarioModel");
 const TestCase = require("../models/testcaseModel");
-const testgenQueue = new Bull("test-gen-queue");
+const testgenQueue = require("../queue/testGenQueue");
 require("../worker/task_gen_test");
 
 // testgenQueue.clean(3600 * 1000);
@@ -90,7 +89,7 @@ exports.getAllTestCases = async (req, res) => {
       filter.use_case = usecase._id;
     }
     if (project_id) {
-      const project = await Project.findOne({ project_id });
+      const project = await Project.findOne({ _id: project_id });
       if (!project) {
         return sendResponse(res, 404, "project not found ", null);
       }

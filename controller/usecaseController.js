@@ -1,15 +1,15 @@
-const Bull = require("bull");
 const UseCase = require("../models/usecaseModel");
 const Project = require("../models/projectModel");
 const sendResponse = require("./responseController");
-const ucNameGenQueue = new Bull("uc-name-gen-queue");
 require("../worker/task_gen_uc_name");
+const ucNameGenQueue = require("../queue/ucNameGenQueue");
 
 // Create list of use cases
 exports.createUseCases = async (req, res) => {
   try {
     // Save the project
     const { project_id, content } = req.body;
+    await ucNameGenQueue.add({ test: "Hello Bull!" });
     await ucNameGenQueue.add(
       {
         usecaseContents: content,
@@ -24,7 +24,6 @@ exports.createUseCases = async (req, res) => {
         attempts: 2,
       }
     );
-
     return sendResponse(res, 200, "Create use cases successfully", null);
   } catch (error) {
     return sendResponse(

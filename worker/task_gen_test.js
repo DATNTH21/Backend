@@ -1,10 +1,9 @@
-const Bull = require("bull");
 const { generateTestCases } = require("../testgen/main");
 const Scenario = require("../models/scenarioModel");
 const TestCase = require("../models/testcaseModel");
 const Project = require("../models/projectModel");
 const { getIO } = require("../socket");
-const testgenQueue = new Bull("test-gen-queue");
+const testgenQueue = require("../queue/testGenQueue");
 
 // testgenQueue.clean(3600 * 1000);
 

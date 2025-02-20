@@ -1,9 +1,8 @@
-const Bull = require("bull");
 const Scenario = require("../models/scenarioModel");
 const Project = require("../models/projectModel");
 
 const { generateScenarios } = require("../testgen/main");
-const scenarioGenQueue = new Bull("scenario-gen-queue");
+const scenarioGenQueue = require("../queue/scenarioGenQueue");
 const { getIO } = require("../socket");
 
 // scenarioGenQueue.clean(3600 * 1000);
@@ -31,8 +30,16 @@ scenarioGenQueue.process(async (job) => {
   });
 });
 
-scenarioGenQueue.on("stalled", function (job) {
+scenarioGenQueue.on("stalled", async function (job) {
   console.log(`💥Job ${job.id} is stalled`);
+  const io = getIO();
+  const { usecases, userId } = job.data;
+  await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+    status: "Failed",
+  });
+  io.to(`user:${userId}`).emit("scenario-failed", {
+    message: "Scenarios generated failed",
+  });
 });
 
 scenarioGenQueue.on("failed", async function (job, err) {
