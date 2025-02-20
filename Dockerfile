@@ -4,8 +4,8 @@ FROM node:23
 # Set working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.jon
-COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY package*.json ./ 
 
 # Install dependencies
 RUN npm install --omit=dev
