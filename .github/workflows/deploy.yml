@@ -1,0 +1,40 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest .
+
+      - name: Publish Image to docker hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ssh to EC2 and pull latest Image
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
+            docker stop testease-backend-container || true
+            docker rm testease-backend-container || true
+            docker image prune -f
+            docker run -d -p 8000:8000 --name testease-backend-container ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
