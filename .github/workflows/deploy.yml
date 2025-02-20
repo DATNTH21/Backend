@@ -19,21 +19,22 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build \
-          --build-arg CLIENT_URL=${{ secrets.CLIENT_URL }} \
-          --build-arg GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
-          --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
-          --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
-          --build-arg MONGO_DB=${{ secrets.MONGO_DB }} \
-          --build-arg ACCESS_TOKEN_EXPIRE=${{ secrets.ACCESS_TOKEN_EXPIRE }} \
-          --build-arg REFRESH_TOKEN_EXPIRE=${{ secrets.REFRESH_TOKEN_EXPIRE }} \
-          --build-arg COOKIE_EXPIRE=${{ secrets.COOKIE_EXPIRE }} \
-          --build-arg RESET_PASSWORD_EXPIRE=${{ secrets.RESET_PASSWORD_EXPIRE }} \
-          --build-arg EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }} \
-          --build-arg EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
-          --build-arg EMAIL_HOST=${{ secrets.EMAIL_HOST }} \
-          --build-arg EMAIL_PORT=${{ secrets.EMAIL_PORT }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest .
+        run: |
+          docker build \
+            --build-arg CLIENT_URL=${{ secrets.CLIENT_URL }} \
+            --build-arg GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
+            --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            --build-arg MONGO_DB=${{ secrets.MONGO_DB }} \
+            --build-arg ACCESS_TOKEN_EXPIRE=${{ secrets.ACCESS_TOKEN_EXPIRE }} \
+            --build-arg REFRESH_TOKEN_EXPIRE=${{ secrets.REFRESH_TOKEN_EXPIRE }} \
+            --build-arg COOKIE_EXPIRE=${{ secrets.COOKIE_EXPIRE }} \
+            --build-arg RESET_PASSWORD_EXPIRE=${{ secrets.RESET_PASSWORD_EXPIRE }} \
+            --build-arg EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }} \
+            --build-arg EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
+            --build-arg EMAIL_HOST=${{ secrets.EMAIL_HOST }} \
+            --build-arg EMAIL_PORT=${{ secrets.EMAIL_PORT }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest .
 
       - name: Publish Image to docker hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
