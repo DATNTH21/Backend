@@ -13,7 +13,7 @@ class EmailHelper {
     });
 
     const otpMessage = `
-            <p>Thank you for registering an account on Wendiago Movie Application. Your OTP code is:</p>
+            <p>Thank you for registering an account on Testease. Your OTP code is:</p>
             <h2>${otpPasscode}</h2>
             <p>Please enter this code to verify your email address.</p>
             <strong>Note: The One-Time Password (OTP) is valid for 5 minutes.</strong>
@@ -21,7 +21,7 @@ class EmailHelper {
     const info = await transporter.sendMail({
       from: "My AI Assistant", // sender address
       to: emailAddress,
-      subject: "[Wendiago Movie] Verify Email", // Subject line
+      subject: "[Testease] Verify Email", // Subject line
       text: `Your OTP code is: ${otpPasscode}`, // plain text body
       html: otpMessage, // html body
     });
@@ -45,14 +45,14 @@ class EmailHelper {
     });
 
     const otpMessage = `
-            <p>You have requested to reset your password on Wendiago Movie. Your OTP code is:</p>
+            <p>You have requested to reset your password on Testease. Your OTP code is:</p>
             <h2>${otpPasscode}</h2>
             <p>Please enter this code to reset your password.</p>
             <strong>Note: The One-Time Password (OTP) is valid for 5 minutes.</strong>
         `;
     const info = await transporter.sendMail({
       to: emailAddress,
-      subject: "[Wendiago Movie] Verify Email", // Subject line
+      subject: "[Testease] Verify Email", // Subject line
       text: `Your OTP code is: ${otpPasscode}`, // plain text body
       html: otpMessage, // html body
     });
