@@ -53,13 +53,7 @@ app.get("/usecase", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send(
-    `<h1>Home</h1>
-    <div>
-    <p><a href="/usecase">Generate use case tests</a></p>
-    <p><a href="/login">Log in with Google</a></p>
-    </div>`
-  );
+  res.send("Welcome to Testease server");
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
