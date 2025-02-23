@@ -24,7 +24,7 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [process.env.CLIENT_URL, process.env.LOCAL_CLIENT_URL],
     credentials: true,
   })
 );
@@ -53,13 +53,7 @@ app.get("/usecase", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send(
-    `<h1>Home</h1>
-    <div>
-    <p><a href="/usecase">Generate use case tests</a></p>
-    <p><a href="/login">Log in with Google</a></p>
-    </div>`
-  );
+  res.send("Welcome to Testease server");
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

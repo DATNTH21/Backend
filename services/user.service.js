@@ -24,7 +24,6 @@ class UserService {
 
     const newUser = await this.userModel.create({
       name,
-      slug: generateRandomString(10),
       email,
       password: hashedPassword,
       isVerified,

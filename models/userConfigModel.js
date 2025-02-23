@@ -78,7 +78,7 @@ UserConfigSchema.pre("save", function (next) {
         fieldKey: "use_case",
         displayName: "Use Case",
         order: 1,
-        visible: true,
+        visible: false,
       },
       {
         fieldKey: "name",

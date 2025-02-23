@@ -35,6 +35,13 @@ class AuthService {
       email,
       password: hashedPassword,
     });
+
+    const newUserConfig = await UserConfig.create({
+      userId: user?._id,
+    });
+
+    console.log("Auth-service. local login user config ", newUserConfig);
+
     const { privateKey, publicKey } = generateRSAKeysForAccess();
     await this.accessModel.create({
       user_id: user?._id,
@@ -52,7 +59,10 @@ class AuthService {
 
     //console.log(foundUser);
     if (!foundUser) {
-      throw new ConflictResponse("Email or password is incorrect", 1010205);
+      throw new ConflictResponse(
+        "This account doesn't exist. Please sign up first",
+        1010205
+      );
     }
     if (foundUser?.isVerified === false) {
       throw new ConflictResponse("Account is not verified", 1010210);
@@ -331,7 +341,7 @@ class AuthService {
         );
 
         // Generate user config:
-        const newUserConfig = UserConfig.create({
+        const newUserConfig = await UserConfig.create({
           userId: newUser?._id,
         });
 

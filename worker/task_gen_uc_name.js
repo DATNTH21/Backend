@@ -1,16 +1,17 @@
-const Bull = require("bull");
 const { getIO } = require("../socket");
 const { generateUseCaseName } = require("../testgen/main");
 const UseCase = require("../models/usecaseModel");
-const ucNameGenQueue = new Bull("uc-name-gen-queue");
+const ucNameGenQueue = require("../queue/ucNameGenQueue");
 
 // ucNameGenQueue.clean(3600 * 1000);
 ucNameGenQueue.process(async (job) => {
   const io = getIO();
   const { usecaseContents, project_id, userId } = job.data;
+  console.log("usecaseContents: ", usecaseContents);
 
   for (const usecaseContent of usecaseContents) {
     const name = await generateUseCaseName(usecaseContent);
+    console.log("name: ", name);
     await UseCase.create({
       project_id,
       name: name,

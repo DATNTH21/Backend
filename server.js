@@ -26,7 +26,7 @@ mongoose.connect(DB).then(() => {
 
 const io = initializeSocket(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -38,7 +38,7 @@ io.use((socket, next) => {
 });
 
 const port = process.env.PORT || 3000;
-httpServer.listen(port, () => {
+httpServer.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on port ${port}`);
 });
 

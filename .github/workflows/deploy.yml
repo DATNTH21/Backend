@@ -1,0 +1,66 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest .
+
+      - name: Publish Image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
+
+      - name: Deploy
+        # Only run this step if the branch is main
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
+
+  # deploy:
+  #   needs: build-and-push
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Ssh to EC2 and pull latest Image
+  #       uses: appleboy/ssh-action@v0.1.10
+  #       with:
+  #         host: ${{ secrets.EC2_HOST }}
+  #         username: ec2-user
+  #         key: ${{ secrets.EC2_SSH_KEY }}
+  #         script: |
+  #           docker pull ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest
+  #           docker stop testease-backend-container || true
+  #           docker rm testease-backend-container || true
+  #           docker image prune -f
+  #           docker run -d -p 8000:8000 \
+  #           --name testease-backend-container \
+  #           -e CLIENT_URL=${{ secrets.CLIENT_URL }} \
+  #           -e GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
+  #           -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+  #           -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+  #           -e MONGO_DB=${{ secrets.MONGO_DB }} \
+  #           -e ACCESS_TOKEN_EXPIRE=${{ secrets.ACCESS_TOKEN_EXPIRE }} \
+  #           -e REFRESH_TOKEN_EXPIRE=${{ secrets.REFRESH_TOKEN_EXPIRE }} \
+  #           -e COOKIE_EXPIRE=${{ secrets.COOKIE_EXPIRE }} \
+  #           -e RESET_PASSWORD_EXPIRE=${{ secrets.RESET_PASSWORD_EXPIRE }} \
+  #           -e EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }} \
+  #           -e EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
+  #           -e EMAIL_HOST=${{ secrets.EMAIL_HOST }} \
+  #           -e EMAIL_PORT=${{ secrets.EMAIL_PORT }} \
+  #           ${{ secrets.DOCKER_USERNAME }}/testease_backend:latest

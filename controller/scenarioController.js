@@ -5,9 +5,8 @@ const Project = require("../models/projectModel");
 const UseCase = require("../models/usecaseModel");
 const sendResponse = require("./responseController");
 
-const Bull = require("bull");
 const TestCase = require("../models/testcaseModel");
-const scenarioGenQueue = new Bull("scenario-gen-queue");
+const scenarioGenQueue = require("../queue/scenarioGenQueue");
 require("../worker/task_gen_scenario");
 
 // Create a new project
