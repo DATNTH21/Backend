@@ -17,6 +17,7 @@ exports.generateScenarios = async (req, res) => {
   try {
     const { use_case_ids } = req.body;
     const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
+    //console.log("Use cases: ", usecases);
     if (!usecases || usecases.length === 0) {
       return sendResponse(res, 404, "Use cases not found", null);
     }
@@ -26,6 +27,7 @@ exports.generateScenarios = async (req, res) => {
     });
 
     await scenarioGenQueue.add(
+      "scenario gen",
       {
         usecases,
         userId: req.user.id,
@@ -44,13 +46,12 @@ exports.generateScenarios = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     console.error("Transaction failed:", error);
-    sendResponse(
-      res,
-      500,
-      "Failed to generate test cases",
-      null,
-      error.message
-    );
+    const { use_case_ids } = req.body;
+    const usecases = await UseCase.find({ use_case_id: { $in: use_case_ids } });
+    await Project.findByIdAndUpdate(usecases[0].project_id.toString(), {
+      status: "Failed",
+    });
+    sendResponse(res, 500, "Failed to generate scenarios", null, error.message);
   } finally {
     session.endSession();
   }

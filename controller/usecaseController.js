@@ -9,8 +9,9 @@ exports.createUseCases = async (req, res) => {
   try {
     // Save the project
     const { project_id, content } = req.body;
-    await ucNameGenQueue.add({ test: "Hello Bull!" });
+    // console.log("ucNameGenQueue: ", ucNameGenQueue);
     await ucNameGenQueue.add(
+      "usecase gen name",
       {
         usecaseContents: content,
         project_id,
@@ -24,6 +25,7 @@ exports.createUseCases = async (req, res) => {
         attempts: 2,
       }
     );
+    // console.log("ucNameGenQueue: job added");
     return sendResponse(res, 200, "Create use cases successfully", null);
   } catch (error) {
     return sendResponse(

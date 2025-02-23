@@ -4,7 +4,7 @@ const getNextSequence = require("../utils/autoIncrementHelper");
 
 const ProjectSchema = new Schema(
   {
-    project_id: { type: String, unique: true },
+    project_id: { type: String, unique: true, required: true },
     name: { type: String, required: true },
     description: { type: String },
     status: {

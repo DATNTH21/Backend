@@ -3,7 +3,7 @@ const Counter = require("../models/counterModel");
 
 async function initializeCounters() {
   try {
-    const counters = ["scenarioId", "projectId", "testCaseId"];
+    const counters = ["scenarioId", "projectId", "testCaseId", "useCaseId"];
 
     for (const counterId of counters) {
       await Counter.findByIdAndUpdate(

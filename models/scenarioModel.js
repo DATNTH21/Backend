@@ -4,7 +4,7 @@ const getNextSequence = require("../utils/autoIncrementHelper");
 
 const ScenarioSchema = new Schema(
   {
-    scenario_id: { type: String, unique: true },
+    scenario_id: { type: String, unique: true, required: true },
     content: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     use_case: {

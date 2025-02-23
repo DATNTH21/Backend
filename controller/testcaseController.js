@@ -39,6 +39,7 @@ exports.generateTestCases = async (req, res) => {
 
     // Add job to queue
     await testgenQueue.add(
+      "test gen",
       {
         data,
         projectId,

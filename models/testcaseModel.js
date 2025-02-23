@@ -4,7 +4,7 @@ const getNextSequence = require("../utils/autoIncrementHelper");
 
 const TestCaseSchema = new Schema(
   {
-    test_case_id: { type: String, unique: true },
+    test_case_id: { type: String, unique: true, required: true },
     use_case: {
       type: mongoose.Schema.ObjectId,
       ref: "UseCase",
@@ -48,24 +48,17 @@ const TestCaseSchema = new Schema(
 
 TestCaseSchema.pre("save", async function (next) {
   if (!this.test_case_id) {
-    const session = await mongoose.startSession();
-    try {
-      await session.withTransaction(async () => {
-        this.test_case_id = await getNextSequence("testCaseId", "TC", session);
-      });
-    } finally {
-      session.endSession();
-    }
+    this.test_case_id = await getNextSequence("testCaseId", "TC");
   }
   next();
 });
 
-TestCaseSchema.post("save", async function () {
-  const Scenario = mongoose.model("Scenario");
-  await Scenario.findByIdAndUpdate(this.scenario, {
-    $inc: { test_cases_count: 1 },
-  });
-});
+// TestCaseSchema.post("save", async function () {
+//   const Scenario = mongoose.model("Scenario");
+//   await Scenario.findByIdAndUpdate(this.scenario, {
+//     $inc: { test_cases_count: 1 },
+//   });
+// });
 
 TestCaseSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {

@@ -1,10 +1,6 @@
-const Bull = require("bull");
+const { Queue } = require("bullmq");
+const bullMQConfig = require("../config/bullmq.config");
 
-const scenarioGenQueue = new Bull("scenario-gen-queue", {
-  redis: {
-    host: "redis",
-    port: 6379,
-  },
-});
+const scenarioGenQueue = new Queue("scenario-gen-queue", bullMQConfig);
 
 module.exports = scenarioGenQueue;
