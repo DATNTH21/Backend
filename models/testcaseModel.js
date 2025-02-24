@@ -30,6 +30,7 @@ const TestCaseSchema = new Schema(
     },
     status: {
       type: String,
+      default: "Untested",
     },
     tester: {
       type: String,
