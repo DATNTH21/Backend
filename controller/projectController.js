@@ -18,7 +18,7 @@ exports.createProject = async (req, res) => {
     const newProject = new Project({
       name,
       description,
-      user: req.user.id, // Array of user IDs associated with this project
+      user: req.user.id,
     });
 
     console.log("Project controller: ", newProject);

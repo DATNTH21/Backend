@@ -4,7 +4,7 @@ const getNextSequence = require("../utils/autoIncrementHelper");
 
 const ProjectSchema = new Schema(
   {
-    project_id: { type: String, unique: true, required: true },
+    project_id: { type: String, unique: true },
     name: { type: String, required: true },
     description: { type: String },
     status: {
@@ -39,10 +39,14 @@ ProjectSchema.virtual("use_cases", {
 ProjectSchema.pre("save", async function (next) {
   if (!this.project_id) {
     const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      await session.withTransaction(async () => {
-        this.project_id = await getNextSequence("projectId", "PR", session);
-      });
+      this.project_id = await getNextSequence("projectId", "PR", session);
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      console.error("Error getting next sequence:", error);
     } finally {
       session.endSession();
     }
