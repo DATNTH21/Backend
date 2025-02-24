@@ -3,6 +3,7 @@ const { getIO } = require("../socket");
 const { generateUseCaseName } = require("../testgen/main");
 const UseCase = require("../models/usecaseModel");
 const bullMQConfig = require("../config/bullmq.config");
+const getNextSequence = require("../utils/autoIncrementHelper");
 
 const worker = new Worker(
   "uc-name-gen-queue",
@@ -18,13 +19,14 @@ const worker = new Worker(
       console.log("Generated use case name:", name);
 
       useCasesToCreate.push({
+        use_case_id: await getNextSequence("useCaseId", "UC"),
         project_id,
         name,
         description: usecaseContent,
       });
     }
 
-    await UseCase.create(useCasesToCreate);
+    await UseCase.insertMany(useCasesToCreate);
 
     io.to(`user:${userId}`).emit("use-case-generated", {
       message: "Use cases created successfully",

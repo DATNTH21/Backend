@@ -4,6 +4,7 @@ const Project = require("../models/projectModel");
 const { generateScenarios } = require("../testgen/main");
 const { getIO } = require("../socket");
 const bullMQConfig = require("../config/bullmq.config");
+const getNextSequence = require("../utils/autoIncrementHelper");
 
 const worker = new Worker(
   "scenario-gen-queue",
@@ -16,6 +17,7 @@ const worker = new Worker(
       //console.log("Scenario worker, scenarios: ", scenarios);
       for (const scenario of scenarios) {
         await Scenario.create({
+          scenario_id: await getNextSequence("scenarioId", "SC"),
           use_case: usecase._id,
           content: scenario,
         });
