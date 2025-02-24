@@ -9,7 +9,14 @@ const ProjectSchema = new Schema(
     description: { type: String },
     status: {
       type: String,
-      enum: ["Generating", "Done", "Seen", "Failed", "Default"],
+      enum: [
+        "Generating test cases",
+        "Generating scenarios",
+        "Done",
+        "Seen",
+        "Failed",
+        "Default",
+      ],
       required: true,
       default: "Default",
     },

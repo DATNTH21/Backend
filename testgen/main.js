@@ -22,13 +22,16 @@ exports.generateScenarios = async (useCase) => {
   const flows = await tcGen.analyzeUseCase(useCase);
   // console.log(JSON.stringify(flows));
 
+  const mainFlowScenarios = await tcGen.generateMainFlowScenario(
+    flows["main_flow"]
+  );
   const subFlowScenarios = await tcGen.generateSubFlowScenario(
     flows["sub_flow"],
     flows["main_flow"]
   );
   // console.log(subFlowScenarios);
   const refinedScenarios = await tcGen.refineScenario(
-    subFlowScenarios,
+    [...mainFlowScenarios, ...subFlowScenarios],
     useCase
   );
   // console.log(refinedScenarios);

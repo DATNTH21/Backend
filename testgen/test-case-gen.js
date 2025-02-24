@@ -123,6 +123,37 @@ class TestCaseGenerator {
     return extractJSON(result);
   }
 
+  // Main Flow Scenario Generator
+  async generateMainFlowScenario(mainFlow) {
+    const prompt = `The following is a Main Flow Scenario Generator Agent that is designed to generate all possible scenarios based on the details provided in the main flow of the use case. This involves predicting various sequences of user interactions that could potentially lead to different outcomes or states of the application. The following rules must be applied to generate accurate and comprehensive scenarios:\n
+  1. Defining a Test Scenario: Given agent a test scenario definition as a high-level description of what to test in a particular functionality or feature of the software application. It is essentially a statement that outlines a specific situation or aspect to be tested.\n
+  2. Preventing the creation of test scenarios that validate individual steps in the flow: This agent is instructed not to create scenarios that only validate individual steps in the main flow. Instead, each scenario must be independent and include a complete sequence of events.\n\n
+
+  Example:\n
+  - main_flow:\n
+  \`\`\`json
+  [
+    "Step 1: User in the shopping cart page and User has added items to the shopping cart.",
+    "Step 2: User select items to checkout by selecting each items by clicking on checkbox before item.",
+    "Step 3: System displays the summary costs.",
+    "Step 4: User click the \"Checkout\" button.",
+    "Step 5: System process to checkout.",
+    "- User is redirected to page that shows one or many new orders of all the items user have chosen.",
+    "- Products from different shops will be separate into different orders , products from the same shop is in one order ."
+  ],
+  \`\`\`
+
+  - Agent output:\n
+  \`\`\`json["Successful Checkout with Single Shop Products", "Successful Checkout with Multiple Shops Products"]\`\`\` \n\n
+
+  - main_flow: ${JSON.stringify(mainFlow)}
+  - Agent output:
+  `;
+
+    const result = await this.generateTextResult(prompt);
+    return extractJSON(result);
+  }
+
   // Sub flow Scenario Generator
   async generateSubFlowScenario(mainFlow, subFlow) {
     const prompt = `The following is a Sub Flow Scenario Generator Agent that is designed to generate test scenarios for other flows(sub-flows) except for the main flow within a use case, such as alternative flows, exception flows, or validation flows. The primary input for this agent is the description of the main flow along with one of the sub-flows. This agent ensures that specific cases, often encountered as deviations or exceptions from the main flow, are thoroughly tested. The desired output of Sub Flow Scenario Generator agent is a list of scenario names that represent meaningful transitions from the main flow to the alternative or exception flow. The following rules must be applied when generating test scenarios:\n
