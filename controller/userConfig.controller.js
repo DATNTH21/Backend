@@ -75,6 +75,7 @@ exports.addUserConfigOption = async (req, res) => {
         { name: "In Progress", icon: "Timer" },
         { name: "Pass", icon: "CheckCircle" },
         { name: "Fail", icon: "CircleOff" },
+        { name: "Untested", icon: "CircleDot" },
       ],
     };
 
@@ -125,7 +126,7 @@ exports.addUserConfigOption = async (req, res) => {
 
 exports.deleteUserConfigOption = async (req, res) => {
   try {
-    const { type, name } = req.body;
+    const { type, name } = req.query;
 
     // Validate the 'type' parameter
     if (!["priority", "status"].includes(type)) {
@@ -166,6 +167,7 @@ exports.deleteUserConfigOption = async (req, res) => {
         { name: "In Progress", icon: "Timer" },
         { name: "Pass", icon: "CheckCircle" },
         { name: "Fail", icon: "CircleOff" },
+        { name: "Untested", icon: "CircleDot" },
       ],
     };
 

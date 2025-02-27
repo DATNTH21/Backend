@@ -60,6 +60,7 @@ UserConfigSchema.pre("save", function (next) {
       { name: "In Progress", icon: "Timer" },
       { name: "Pass", icon: "CheckCircle" },
       { name: "Fail", icon: "CircleOff" },
+      { name: "Untested", icon: "CircleDot" },
     ];
   }
 

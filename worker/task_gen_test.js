@@ -28,6 +28,7 @@ const worker = new Worker(
             project: projectId,
             name: tc.testCaseName,
             expected_result: tc.expectedResult,
+            status: "Untested",
           }))
         );
 

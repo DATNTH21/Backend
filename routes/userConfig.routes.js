@@ -15,6 +15,6 @@ router.put(
 
 router.post("/option", UserConfigController.addUserConfigOption);
 
-router.delete("/option", UserConfigController.deleteUserConfigOption);
+router.delete("/option/", UserConfigController.deleteUserConfigOption);
 
 module.exports = router;
